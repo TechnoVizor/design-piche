@@ -64,16 +64,17 @@
   --cream-100: #f6f6f3;
   --cream-50: #fbfbf9;
   --white: #ffffff;
-  --blue-500: #435ee5;
+  --blue-500: #13b5ca;
   --blue-400: #617bff;
   --purple-600: #7e238b;
   --purple-500: #6845ab;
   --green-900: #103c25;
   --green-100: #c7f0da;
 
-  /* PICHE overrides the design system's default red brand with blue */
+  /* PICHE overrides the design system's default red brand with blue — the
+     same teal accent (and pressed shade) as version-2. */
   --brand-primary: var(--blue-500);
-  --brand-primary-pressed: #2f47c4;
+  --brand-primary-pressed: #0f97a9;
   --text-primary: var(--ink-900);
   --text-link: var(--ink-800);
   --text-body: var(--ink-600);

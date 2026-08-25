@@ -212,7 +212,7 @@ export function Explore3DSection() {
             }
 
             const pickMat = new THREE.MeshBasicMaterial({
-              color: 0x435ee5,
+              color: 0x13b5ca,
               transparent: true,
               opacity: 0,
               depthWrite: false,
@@ -339,10 +339,10 @@ export function Explore3DSection() {
         const hovered = hover === m;
         const mat = m.material as THREE.MeshBasicMaterial;
         if (isSel) {
-          mat.color.setHex(0x435ee5);
+          mat.color.setHex(0x13b5ca);
           mat.opacity = 0.66;
         } else if (hovered) {
-          mat.color.setHex(0x435ee5);
+          mat.color.setHex(0x13b5ca);
           mat.opacity = 0.3;
         } else if (onFloor) {
           mat.color.setHex(statusHex(u ? u.status : "sold"));
