@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PICHE — project explorer</title>
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/colors.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/typography.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/radii.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/motion.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: var(--white); font-family: var(--font-text), system-ui, sans-serif; color: var(--graphite); }
+  #stage { position: relative; height: 100%; display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: 16px; padding: 0; box-sizing: border-box; }
+  .pane { position: relative; background: var(--white); border-radius: var(--radius-card); overflow: hidden; }
+  .fade { transition: opacity .5s ease; }
+  .label { font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--pewter); }
+  .title { font: var(--type-category-weight) var(--type-category-size)/var(--type-category-lh) var(--font-text); color: var(--carbon-dark); }
+  button { font-family: inherit; }
+  .ghost { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 40px; padding: 0 18px; background: rgba(255,255,255,.65); backdrop-filter: blur(8px); border: 1px solid var(--pale-silver); border-radius: var(--radius-control); font: var(--type-button-weight) var(--type-button-size)/1 var(--font-text); color: var(--carbon-dark); cursor: pointer; transition: var(--transition-control); }
+  .ghost:hover { background: rgba(255,255,255,.9); border-color: var(--carbon-dark); }
+  .cta { background: var(--electric-blue); border: 0; border-radius: var(--radius-control); height: 40px; padding: 0 18px; color: #fff; font: var(--type-button-weight) var(--type-button-size)/1 var(--font-text); cursor: pointer; transition: var(--transition-control); }
+  .cta:hover { background: var(--action-primary-hover); }
+  .hlabel { position: absolute; transform: translate(-50%, -50%); pointer-events: none; font: 500 13px/1 var(--font-text); color: var(--carbon-dark); background: rgba(255,255,255,.75); padding: 4px 8px; border-radius: var(--radius-control); }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--cloud-gray); cursor: pointer; }
+  .row:hover .code { color: var(--electric-blue); }
+  .code { font: 500 15px/20px var(--font-text); color: var(--carbon-dark); transition: var(--transition-control); }
+  .meta { font: 400 13px/18px var(--font-text); color: var(--pewter); }
+  :root { --electric-blue: #13B5CA; --action-primary: #13B5CA; --action-primary-hover: #0F97A9; }
+  #map { position: absolute; inset: 0; background: var(--light-ash); }
+  .leaflet-container { background: var(--light-ash); font-family: var(--font-text), system-ui, sans-serif; }
+  .leaflet-control-attribution { font-size: 10px; background: rgba(255,255,255,.7); }
+  .pin { width: 34px; height: 34px; display: grid; place-items: center; cursor: pointer; }
+  .pin i { width: 11px; height: 11px; border-radius: 50%; background: #13B5CA; box-shadow: 0 0 0 5px rgba(19,181,202,.16), 0 1px 3px rgba(0,0,0,.25); transition: transform .22s var(--easing-standard, ease), box-shadow .22s ease; }
+  .pin.on i, .pin:hover i { transform: scale(1.5); box-shadow: 0 0 0 10px rgba(19,181,202,.18), 0 2px 6px rgba(0,0,0,.25); }
+  .ptip { background: #fff; border: 0; box-shadow: 0 2px 10px rgba(0,0,0,.12); border-radius: var(--radius-control); padding: 7px 11px; }
+  .ptip .n { font: 500 14px/18px var(--font-text); color: var(--carbon-dark); }
+  .ptip .l { font: 400 11px/16px var(--font-text); letter-spacing: 1.2px; color: var(--pewter); text-transform: uppercase; }
+  .leaflet-tooltip.ptip::before { display: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="pane" id="viewPane" style="background: var(--light-ash)">
+    <div id="map" class="fade"></div>
+    <div id="three" class="fade" style="position:absolute; inset:0; opacity:0; pointer-events:none"></div>
+    <div id="labels" style="position:absolute; inset:0; pointer-events:none"></div>
+    <div style="position:absolute; z-index:600; left:21.44px; top:21.44px; display:flex; flex-direction:column; gap:4px; background:rgba(255,255,255,.82); backdrop-filter:blur(6px); padding:10px 14px; border-radius:var(--radius-control)">
+      <span class="title" id="vTitle">Our projects in Latvia</span>
+      <span class="label" id="vHint">Hover for details, click to open the buildings</span>
+    </div>
+    <div style="position:absolute; z-index:600; left:21.44px; bottom:21.44px; display:flex; gap:8px">
+      <button class="ghost" id="backMap" style="display:none">‹ Back to map</button>
+      <button class="ghost" id="backSite" style="display:none">All buildings</button>
+    </div>
+    <div id="legend" style="position:absolute; z-index:600; right:21.44px; bottom:72px; display:none; gap:16px; background:rgba(255,255,255,.65); backdrop-filter:blur(8px); padding:8px 14px; border-radius:var(--radius-control)">
+      <span class="meta" style="display:flex;align-items:center;gap:6px"><i style="width:8px;height:8px;border-radius:50%;background:#2E9E5B"></i>Available</span>
+      <span class="meta" style="display:flex;align-items:center;gap:6px"><i style="width:8px;height:8px;border-radius:50%;background:#E0A526"></i>Reserved</span>
+      <span class="meta" style="display:flex;align-items:center;gap:6px"><i style="width:8px;height:8px;border-radius:50%;background:#C8443A"></i>Sold</span>
+    </div>
+  </div>
+
+  <div class="pane" id="panel" style="background: var(--light-ash); padding: 21.44px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div id="panelHead" style="display:flex; flex-direction:column; gap:4px">
+      <span class="title" id="pTitle">Projects</span>
+      <span class="label" id="pSub">Pick a project to see buildings, floors and apartments</span>
+    </div>
+    <div id="floorWrap" style="display:none; flex-direction:column; gap:8px">
+      <span class="label">Floor</span>
+      <div id="floors" style="display:flex; gap:4px; flex-wrap:wrap"></div>
+    </div>
+    <div id="units" style="flex:1; overflow:auto; display:none; flex-direction:column"></div>
+    <div id="unitDetail" style="display:none; flex-direction:column; gap:12px; background:var(--white); border-radius:var(--radius-card); padding:16px">
+      <span class="title" id="uCode"></span>
+      <span class="meta" id="uMeta"></span>
+      <div style="display:flex; align-items:baseline; justify-content:space-between">
+        <span style="font:500 20px/24px var(--font-display), sans-serif; color:var(--carbon-dark)" id="uPrice"></span>
+        <span class="meta" id="uStatus"></span>
+      </div>
+      <div style="display:flex; gap:8px">
+        <button class="cta" style="flex:1" id="uApply">Apply now</button>
+        <button class="ghost" style="flex:1; height:40px" id="uPlan">Floor plan</button>
+      </div>
+    </div>
+    <div id="projectList" style="display:flex; flex-direction:column"></div>
+  </div>
+</div>
+
+<script>
+const PROJECTS = [
+  { id:'pr-row', name:'Priežu Rezidences row houses', loc:'Mārupe', coords:[23.968, 56.897], houses:3, floors:2, kind:'row' },
+  { id:'pr-apt', name:'Priežu Rezidences apartments', loc:'Mārupe', coords:[23.999, 56.882], houses:3, floors:5, kind:'apt' },
+  { id:'mez', name:'Mežaparka rezidences', loc:'Rīga', coords:[24.152, 56.996], houses:2, floors:6, kind:'apt' },
+  { id:'krum', name:'Krūmiņsala 29', loc:'Rīga', coords:[24.205, 56.921], houses:2, floors:4, kind:'apt' }
+];
+const STATUS = {
+  available: { label:'Available', color:'#2E9E5B' },
+  reserved:  { label:'Reserved',  color:'#E0A526' },
+  sold:      { label:'Sold',      color:'#C8443A' }
+};
+const ASPECT = { front:'Front · courtyard', back:'Back · garden', corner:'Corner · dual aspect' };
+const LETTER = i => String.fromCharCode(65 + i);
+
+/* apartment typologies — width is the share of the facade the plan occupies */
+const TYPES = [
+  { key:'studio',    label:'Studio',            rooms:1, area:34, w:.8,  bal:'French balcony' },
+  { key:'oneBed',    label:'1-bedroom',         rooms:2, area:48, w:1,   bal:'Balcony 4 m²' },
+  { key:'twoBed',    label:'2-bedroom',         rooms:3, area:67, w:1.3, bal:'Balcony 6 m²' },
+  { key:'threeBed',  label:'3-bedroom',         rooms:4, area:88, w:1.7, bal:'Loggia 8 m²' },
+  { key:'cornerTwo', label:'2-bedroom corner',  rooms:3, area:74, w:1.4, bal:'Dual-aspect loggia' },
+  { key:'cornerThree', label:'3-bedroom corner',rooms:4, area:96, w:1.8, bal:'Wrap-around terrace' },
+  { key:'garden',    label:'Garden apartment',  rooms:3, area:79, w:1.5, bal:'Private terrace 18 m²' },
+  { key:'penthouse', label:'Penthouse',         rooms:5, area:132,w:2.4, bal:'Roof terrace 40 m²' },
+  { key:'duplex',    label:'Duplex',            rooms:4, area:104,w:1.9, bal:'Two-level loggia' }
+];
+const T_BY = TYPES.reduce((a, t) => (a[t.key] = t, a), {});
+
+/* one mix per floor band, so no two floors read the same */
+function mixFor(level, floors, kind, side, seed) {
+  if (kind === 'row') return level === 0 ? ['garden', 'garden'] : level === floors - 1 ? ['duplex', 'twoBed'] : ['twoBed', 'oneBed'];
+  if (level === 0) return side === 'back' ? ['garden', 'garden', 'oneBed'] : ['cornerTwo', 'oneBed', 'garden'];
+  if (level === floors - 1) return side === 'front' ? ['penthouse', 'cornerThree'] : ['duplex', 'twoBed', 'studio'];
+  const mixes = [
+    ['cornerTwo', 'oneBed', 'twoBed'],
+    ['cornerThree', 'studio', 'twoBed'],
+    ['twoBed', 'oneBed', 'oneBed', 'studio'],
+    ['cornerTwo', 'threeBed'],
+    ['threeBed', 'studio', 'oneBed']
+  ];
+  return mixes[(level * 2 + seed + (side === 'back' ? 1 : 0)) % mixes.length];
+}
+
+function buildProject(p) {
+  const houses = [];
+  for (let h = 0; h < p.houses; h++) {
+    const floors = [];
+    for (let f = 0; f < p.floors; f++) {
+      const units = [];
+      ['front', 'back'].forEach(side => {
+        const keys = mixFor(f, p.floors, p.kind, side, h * 3);
+        const total = keys.reduce((a, k) => a + T_BY[k].w, 0);
+        let cursor = 0;
+        keys.forEach((k, i) => {
+          const t = T_BY[k];
+          const seed = (h * 13 + f * 7 + i * 5 + (side === 'front' ? 0 : 3)) % 12;
+          const isCorner = k.startsWith('corner') || (i === 0 && f === p.floors - 1);
+          const span = t.w / total;
+          const floorPremium = 1 + f * 0.022;
+          const area = t.area + (seed % 5) - 2;
+          units.push({
+            code: LETTER(h) + (f + 1) + String.fromCharCode(97 + units.length).toUpperCase(),
+            type: t.key, label: t.label, balcony: t.bal,
+            rooms: t.rooms, area,
+            state: seed < 6 ? 'available' : seed < 10 ? 'reserved' : 'sold',
+            side, span, offset: cursor,
+            aspect: isCorner ? 'corner' : side,
+            corner: isCorner ? (i === 0 ? 'left' : 'right') : null,
+            terrace: k === 'penthouse' || k === 'garden',
+            price: Math.round(area * (2380 + seed * 26) * floorPremium / 500) * 500
+          });
+          cursor += span;
+        });
+      });
+      floors.push({ units });
+    }
+    houses.push({ letter: LETTER(h), floors });
+  }
+  return houses;
+}
+PROJECTS.forEach(p => p.data = buildProject(p));
+
+const fmt = n => '€ ' + n.toLocaleString('en-US').replace(/,/g, ' ');
+const el = id => document.getElementById(id);
+let map = null, markers = {}, mapReady = false;
+let state = { project: null, house: 0, floor: 0, unit: null, mode: 'map' };
+
+/* ---------- map (Leaflet) ---------- */
+const LV_VIEW = { center: [56.92, 24.15], zoom: 9 };
+
+function initMap() {
+  map = L.map('map', {
+    center: LV_VIEW.center, zoom: LV_VIEW.zoom, zoomControl: true,
+    scrollWheelZoom: true, attributionControl: true, zoomSnap: 0.25
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 20,
+    attribution: '&copy; OpenStreetMap, &copy; CARTO'
+  }).addTo(map);
+  map.zoomControl.setPosition('bottomright');
+
+  PROJECTS.forEach(p => {
+    const icon = L.divIcon({ className: '', html: '<div class="pin"><i></i></div>', iconSize: [34, 34], iconAnchor: [17, 17] });
+    const mk = L.marker([p.coords[1], p.coords[0]], { icon, riseOnHover: true }).addTo(map);
+    mk.bindTooltip('<div class="n">' + p.name + '</div><div class="l">' + p.loc + ' · ' + p.houses + ' buildings</div>',
+      { className: 'ptip', direction: 'top', offset: [0, -14], opacity: 1 });
+    mk.on('mouseover', () => hoverProject(p.id));
+    mk.on('mouseout', () => hoverProject(null));
+    mk.on('click', () => flyTo(p));
+    markers[p.id] = mk;
+  });
+
+  fitAll();
+  mapReady = true;
+  renderProjectList();
+}
+
+function fitAll() {
+  const b = L.latLngBounds(PROJECTS.map(p => [p.coords[1], p.coords[0]]));
+  map.fitBounds(b, { padding: [90, 90], maxZoom: 12, animate: false });
+}
+
+function pinEl(id) {
+  const mk = markers[id];
+  return mk && mk.getElement() ? mk.getElement().querySelector('.pin') : null;
+}
+
+/* hover: highlight only — no map movement, so the cursor never loses the pin.
+   Zooming happens from the project list (cursor is off the map there) and on click. */
+let hoveredId = null;
+function hoverProject(id) {
+  hoveredId = id;
+  PROJECTS.forEach(p => { const e = pinEl(p.id); if (e) e.classList.toggle('on', p.id === id); });
+  document.querySelectorAll('#projectList .row').forEach(r => {
+    r.style.background = r.dataset.id === id ? 'var(--white)' : 'transparent';
+  });
+}
+
+/* hovering a row in the side list previews the location on the map */
+let rowTimer = null;
+function previewProject(id) {
+  if (!map || state.mode !== 'map') return;
+  clearTimeout(rowTimer);
+  hoverProject(id);
+  if (!id) { rowTimer = setTimeout(() => { if (!hoveredId && state.mode === 'map') fitAllAnimated(); }, 400); return; }
+  const p = PROJECTS.find(x => x.id === id);
+  markers[id].openTooltip();
+  rowTimer = setTimeout(() => {
+    if (hoveredId !== id || state.mode !== 'map') return;
+    map.flyTo([p.coords[1], p.coords[0]], 14, { duration: 0.8 });
+  }, 150);
+}
+
+function fitAllAnimated() {
+  const b = L.latLngBounds(PROJECTS.map(p => [p.coords[1], p.coords[0]]));
+  map.flyToBounds(b, { padding: [90, 90], maxZoom: 12, duration: 0.8 });
+}
+
+/* click: zoom right down to the site, then hand over to the 3D scene */
+function flyTo(p) {
+  if (state.mode !== 'map') return;
+  state.mode = 'flying';
+  el('vTitle').textContent = p.name;
+  el('vHint').textContent = p.loc + ' · zooming in';
+  markers[p.id].closeTooltip();
+  map.flyTo([p.coords[1], p.coords[0]], 17.5, { duration: 1.25 });
+  setTimeout(() => { el('map').style.opacity = 0; }, 900);
+  setTimeout(() => { state.mode = 'map'; enterProject(p); }, 1450);
+}
+
+function resetMap() {
+  state.mode = 'map'; state.project = null; state.unit = null;
+  el('three').style.opacity = 0; el('three').style.pointerEvents = 'none';
+  el('labels').innerHTML = '';
+  el('viewPane').style.background = 'var(--light-ash)';
+  el('backMap').style.display = 'none'; el('backSite').style.display = 'none';
+  el('legend').style.display = 'none';
+  el('floorWrap').style.display = 'none'; el('units').style.display = 'none'; el('unitDetail').style.display = 'none';
+  el('projectList').style.display = 'flex';
+  el('pTitle').textContent = 'Projects'; el('pSub').textContent = 'Pick a project to see buildings, floors and apartments';
+  el('vTitle').textContent = 'Our projects in Latvia'; el('vHint').textContent = 'Hover for details, click to open the buildings';
+  el('map').style.opacity = 1;
+  hoveredId = null;
+  map.invalidateSize();
+  fitAllAnimated();
+}
+
+if (window.L) initMap(); else window.addEventListener('load', initMap);
+
+/* ---------- 3D ---------- */
+const T = window.THREE;
+let hover = { hi: null, fi: null, unit: null };
+const raycaster = new T.Raycaster();
+
+function pick(e) {
+  const dom = renderer.domElement, r = dom.getBoundingClientRect();
+  raycaster.setFromCamera(new T.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
+  /* nearest surface wins: balconies protrude, so they pick as apartments and the wall behind picks as its floor */
+  const hits = raycaster.intersectObjects(unitMeshes.concat(floorMeshes));
+  if (!hits.length) return { hi: null, fi: null, unit: null };
+  const d = hits[0].object.userData;
+  return { hi: d.hi, fi: d.fi, unit: d.unit || null };
+}
+
+function hoverHint() {
+  if (!state.project) return;
+  if (state.house < 0) {
+    if (hover.hi === null) el('vHint').textContent = 'Drag to rotate. Hover a floor, click to open.';
+    else if (hover.unit) el('vHint').textContent = 'Building ' + state.project.data[hover.hi].letter + ' · apartment ' + hover.unit.code + ' — click to open';
+    else el('vHint').textContent = 'Building ' + state.project.data[hover.hi].letter + ' · floor ' + (hover.fi + 1) + ' — click to open';
+    return;
+  }
+  const h = state.project.data[state.house];
+  if (hover.unit && hover.hi === state.house) {
+    el('vHint').textContent = hover.unit.code + ' · ' + hover.unit.label + ' · ' + hover.unit.area + ' m² · ' + STATUS[hover.unit.state].label;
+  } else if (hover.hi === state.house && hover.fi !== null) {
+    el('vHint').textContent = 'Building ' + h.letter + ' · floor ' + (hover.fi + 1) + ' — click to open';
+  } else if (hover.hi !== null && hover.hi !== state.house) {
+    el('vHint').textContent = 'Building ' + state.project.data[hover.hi].letter + ' — click to open';
+  } else {
+    el('vHint').textContent = 'Building ' + h.letter + ' · floor ' + (state.floor + 1) + ' · pick an apartment';
+  }
+}
+let renderer, scene, camera, group, floorMeshes = [], labelEls = [], cam = { theta: .6, phi: .95, dist: 30, tx: 0, ty: 2, tz: 0 }, want = { ...cam }, dragging = false, lastX = 0, lastY = 0, moved = false, raf = null;
+
+function initThree() {
+  const host = el('three');
+  renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = T.PCFSoftShadowMap;
+  renderer.outputEncoding = T.sRGBEncoding;
+  host.appendChild(renderer.domElement);
+  renderer.domElement.style.cursor = 'grab';
+  scene = new T.Scene();
+  scene.fog = new T.Fog('#e7eee5', 95, 190);
+  camera = new T.PerspectiveCamera(34, 1, .1, 400);
+  scene.add(new T.HemisphereLight('#cfe2f2', '#9fae90', .55));
+  const dir = new T.DirectionalLight('#fff2df', .95);
+  dir.position.set(16, 26, 12);
+  dir.castShadow = true;
+  dir.shadow.mapSize.set(1024, 1024);
+  dir.shadow.camera.left = -50; dir.shadow.camera.right = 50;
+  dir.shadow.camera.top = 50; dir.shadow.camera.bottom = -50;
+  dir.shadow.camera.far = 120; dir.shadow.bias = -0.0012;
+  scene.add(dir);
+  scene.add(new T.AmbientLight('#ffffff', .1));
+  group = new T.Group(); scene.add(group);
+
+  const dom = renderer.domElement;
+  dom.addEventListener('pointerdown', e => { dragging = true; moved = false; lastX = e.clientX; lastY = e.clientY; dom.style.cursor = 'grabbing'; });
+  window.addEventListener('pointerup', () => { dragging = false; dom.style.cursor = hover.unit || hover.fi !== null ? 'pointer' : 'grab'; });
+
+  dom.addEventListener('pointermove', e => {
+    if (dragging || !state.project) return;
+    const h = pick(e);
+    const changed = h.hi !== hover.hi || h.fi !== hover.fi || (h.unit && h.unit.code) !== (hover.unit && hover.unit.code);
+    hover = h;
+    dom.style.cursor = h.hi !== null ? 'pointer' : 'grab';
+    if (changed) { paint(); hoverHint(); }
+  });
+  dom.addEventListener('pointerleave', () => { hover = { hi: null, fi: null, unit: null }; paint(); hoverHint(); });
+  window.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    want.theta -= (e.clientX - lastX) * .006;
+    want.phi = Math.max(.35, Math.min(1.35, want.phi - (e.clientY - lastY) * .004));
+    lastX = e.clientX; lastY = e.clientY; moved = true;
+  });
+  dom.addEventListener('click', e => {
+    if (moved) return;
+    const d = pick(e);
+    if (d.hi === null) return;
+    if (d.hi !== state.house) { focusHouse(d.hi, d.fi != null ? d.fi : 0); return; }
+    if (d.fi !== state.floor) { selectFloor(d.fi); return; }
+    if (d.unit) {
+      if (d.unit.state === 'sold') { el('vHint').textContent = 'Apartment ' + d.unit.code + ' is sold'; return; }
+      state.unit = d.unit; paint(); renderPanel(); renderDetail();
+    }
+  });
+  window.addEventListener('resize', resizeThree);
+  loop();
+}
+
+function resizeThree() {
+  if (!renderer) return;
+  const b = el('viewPane').getBoundingClientRect();
+  camera.aspect = b.width / b.height; camera.updateProjectionMatrix();
+  renderer.setSize(b.width, b.height);
+  if (state.mode === 'map' && map) map.invalidateSize();
+}
+
+function enterProject(p) {
+  state = { project: p, house: -1, floor: 0, unit: null, mode: '3d' };
+  if (!renderer) initThree();
+  resizeThree();
+  buildScene(p);
+  el('viewPane').style.background = 'var(--white)';
+  el('three').style.opacity = 1; el('three').style.pointerEvents = 'auto';
+  el('backMap').style.display = 'inline-flex';
+  el('legend').style.display = 'flex';
+  el('projectList').style.display = 'none';
+  el('pTitle').textContent = p.name;
+  el('pSub').textContent = p.loc + ' · ' + p.houses + ' buildings · ' + p.floors + ' floors';
+  el('vHint').textContent = 'Drag to rotate. Hover a floor, click to open.';
+  renderPanel();
+}
+
+let unitMeshes = [], shellParts = [];
+
+function mat(color, opts) {
+  return new T.MeshStandardMaterial(Object.assign({ color: color, roughness: .72, metalness: .04 }, opts || {}));
+}
+
+function buildScene(p) {
+  while (group.children.length) group.remove(group.children[0]);
+  floorMeshes = []; unitMeshes = []; shellParts = [];
+
+  const lawn = new T.Mesh(new T.CircleGeometry(46, 96), mat('#cddec2', { roughness: 1 }));
+  lawn.rotation.x = -Math.PI / 2; lawn.receiveShadow = true; group.add(lawn);
+  const plaza = new T.Mesh(new T.CircleGeometry(24, 72), mat('#e6e3dc', { roughness: .95 }));
+  plaza.rotation.x = -Math.PI / 2; plaza.position.y = .02; plaza.receiveShadow = true; group.add(plaza);
+  const road = new T.Mesh(new T.PlaneGeometry(96, 4.6), mat('#d8d5cf', { roughness: 1 }));
+  road.rotation.x = -Math.PI / 2; road.position.set(0, .03, 15); road.receiveShadow = true; group.add(road);
+
+  const trunkMat = mat('#7d6a55'), leafMat = mat('#6f9c62', { roughness: .9 });
+  const leafMat2 = mat('#87ad6f', { roughness: .9 });
+  for (let i = 0; i < 40; i++) {
+    const a = (i / 40) * Math.PI * 2 + (i % 3) * .07, r = 27 + (i % 5) * 2.4;
+    const h = 4 + (i % 4) * 1.1;
+    const trunk = new T.Mesh(new T.CylinderGeometry(.16, .22, h * .34, 8), trunkMat);
+    trunk.position.set(Math.cos(a) * r, h * .17, Math.sin(a) * r); group.add(trunk);
+    const crown = new T.Mesh(new T.ConeGeometry(1.15, h, 14), i % 2 ? leafMat : leafMat2);
+    crown.position.set(Math.cos(a) * r, h * .34 + h / 2, Math.sin(a) * r);
+    crown.castShadow = true; group.add(crown);
+  }
+
+  const fh = p.kind === 'row' ? 1.7 : 1.5, fw = p.kind === 'row' ? 8.4 : 7.2, fd = p.kind === 'row' ? 5.4 : 5.8;
+  const gapX = fw + 3.2;
+  const facade = mat('#e8dccb', { roughness: .82 });
+  const glass = new T.MeshStandardMaterial({ color: '#6fa8c9', roughness: .16, metalness: .38, transparent: false });
+  const roofMat = mat('#2f353d', { roughness: .85 });
+  const baseMat = mat('#b9ada0');
+
+  p.data.forEach((house, hi) => {
+    const x = (hi - (p.houses - 1) / 2) * gapX;
+
+    const base = new T.Mesh(new T.BoxGeometry(fw + 1.1, .5, fd + 1.1), baseMat.clone());
+    base.position.set(x, .25, 0); base.castShadow = true; base.receiveShadow = true;
+    base.userData = { hi }; group.add(base); shellParts.push(base);
+
+    house.floors.forEach((floor, fi) => {
+      const y0 = .5 + fh * fi + fh / 2, y = y0;
+      const shell = new T.Mesh(new T.BoxGeometry(fw, fh * .96, fd), facade.clone());
+      shell.position.set(x, y, 0);
+      shell.castShadow = true; shell.receiveShadow = true;
+      shell.userData = { hi, fi };
+      group.add(shell); floorMeshes.push(shell);
+
+      /* glazing band per floor — reads as windows, keeps the volume smooth */
+      [1, -1].forEach(sgn => {
+        const band = new T.Mesh(new T.BoxGeometry(fw * .88, fh * .42, .12), glass.clone());
+        band.position.set(x, y + fh * .06, sgn * (fd / 2 + .02));
+        band.renderOrder = 2;
+        band.userData = { hi, fi };
+        group.add(band); floorMeshes.push(band);
+      });
+
+      /* per-apartment volumes: width follows the plan, so a penthouse reads wider than a studio */
+      floor.units.forEach(u => {
+        const sgn = u.side === 'front' ? 1 : -1;
+        const inner = fw - .44;
+        const w = Math.max(.6, inner * u.span - .22);
+        const centre = inner * (u.offset + u.span / 2) - inner / 2;
+        const ux = x + (u.side === 'front' ? centre : -centre);
+        const yb = y0 - fh * .14;
+        const depth = u.terrace ? 1.15 : .7;
+        const mk = (geo, px, py, pz, m) => {
+          const b = new T.Mesh(geo, m);
+          b.position.set(px, py, pz);
+          b.castShadow = true; b.renderOrder = 3;
+          b.userData = { hi, fi, unit: u };
+          group.add(b); unitMeshes.push(b);
+        };
+        mk(new T.BoxGeometry(w, fh * (u.type === 'studio' ? .22 : .34), depth), ux, yb, sgn * (fd / 2 + depth / 2 + .03), mat('#dfe3e7'));
+        mk(new T.BoxGeometry(w, .07, depth + .04), ux, yb + fh * .17, sgn * (fd / 2 + depth / 2 + .03), mat('#b9bec4', { metalness: .3, roughness: .5 }));
+        if (u.corner) {
+          const sx = x + (u.corner === 'left' ? -1 : 1) * (fw / 2 + .35);
+          mk(new T.BoxGeometry(.7, fh * .34, fd * .42), sx, yb, sgn * fd * .21, mat('#dfe3e7'));
+          mk(new T.BoxGeometry(.74, .07, fd * .42), sx, yb + fh * .17, sgn * fd * .21, mat('#b9bec4', { metalness: .3, roughness: .5 }));
+        }
+      });
+    });
+
+    const top = .5 + fh * house.floors.length;
+    const roof = new T.Mesh(new T.BoxGeometry(fw + .7, .3, fd + .7), roofMat.clone());
+    roof.position.set(x, top + .15, 0); roof.castShadow = true;
+    roof.renderOrder = 1; roof.userData = { hi }; group.add(roof); shellParts.push(roof);
+    const parapet = new T.Mesh(new T.TorusGeometry(.001, .001, 3, 3), roofMat); group.add(parapet);
+
+    house.x = x; house.top = top; house.fh = fh;
+  });
+
+  cam = { theta: .8, phi: 1.24, dist: 52, tx: 0, ty: p.floors * fh * .45, tz: 0 };
+  want = { ...cam };
+  buildLabels(p);
+  paint();
+}
+
+function buildLabels(p) {
+  el('labels').innerHTML = '';
+  labelEls = p.data.map(h => {
+    const d = document.createElement('div');
+    d.className = 'hlabel'; d.textContent = h.letter;
+    el('labels').appendChild(d);
+    return { node: d, pos: new T.Vector3(h.x, h.top + 1.4, 0) };
+  });
+}
+
+function focusHouse(hi, fi) {
+  const p = state.project, h = p.data[hi];
+  state.house = hi; state.floor = fi; state.unit = null;
+  want = { theta: .62, phi: 1.24, dist: 38, tx: h.x, ty: h.top * .45, tz: 0 };
+  el('backSite').style.display = 'inline-flex';
+  el('vHint').textContent = 'Building ' + h.letter + ' · pick a floor, then an apartment';
+  paint(); renderPanel();
+}
+
+function clearHover() { hover = { hi: null, fi: null, unit: null }; }
+
+function unfocus() {
+  clearHover();
+  const p = state.project;
+  state.house = -1; state.unit = null;
+  want = { theta: .8, phi: 1.24, dist: 52, tx: 0, ty: p.floors * p.data[0].fh * .45, tz: 0 };
+  el('backSite').style.display = 'none';
+  el('vHint').textContent = 'Drag to rotate. Hover a floor, click to open.';
+  paint(); renderPanel();
+}
+
+function selectFloor(fi) {
+  const h = state.project.data[state.house];
+  state.floor = fi; state.unit = null;
+  want = { theta: .62, phi: 1.28, dist: 34, tx: h.x, ty: Math.max(3, .5 + h.fh * (fi + .6)), tz: 0 };
+  el('vHint').textContent = 'Building ' + h.letter + ' · floor ' + (fi + 1) + ' · pick an apartment';
+  paint(); renderPanel();
+}
+
+const UNIT_COLOR = { available: '#2E9E5B', reserved: '#E0A526', sold: '#C8443A' };
+
+function paint() {
+  /* buildings stay solid; the hovered or selected floor is tinted, its neighbours only dimmed slightly */
+  const selHi = state.house >= 0 ? state.house : null;
+  const actHi = selHi !== null ? selHi : hover.hi;
+  const actFi = selHi !== null ? state.floor : hover.fi;
+
+  floorMeshes.forEach(m => {
+    const { hi, fi } = m.userData;
+    const isGlass = m.material.metalness > .3;
+    const lit = hi === actHi && fi === actFi;
+    const hot = hover.hi === hi && hover.fi === fi && !hover.unit;
+    const dim = actHi !== null && hi !== actHi;
+    if (lit || hot) m.material.color.set(isGlass ? '#5fd6e6' : '#dff6f9');
+    else if (dim) m.material.color.set(isGlass ? '#8fb4c4' : '#ded6ca');
+    else m.material.color.set(isGlass ? '#6fa8c9' : '#e8dccb');
+    m.material.opacity = 1;
+    m.material.transparent = false;
+    m.material.depthWrite = true;
+    m.material.needsUpdate = true;
+  });
+
+  shellParts.forEach(m => {
+    m.material.opacity = 1;
+    m.material.transparent = false;
+    m.material.depthWrite = true;
+    m.material.needsUpdate = true;
+  });
+
+  unitMeshes.forEach(m => {
+    const { hi, fi, unit } = m.userData;
+    const live = actHi !== null && hi === actHi && fi === actFi;
+    const sameHouse = actHi !== null && hi === actHi;
+    const isSel = live && state.unit && state.unit.code === unit.code;
+    const isHot = live && hover.unit && hover.unit.code === unit.code;
+    m.material.color.set(isSel ? '#171A20' : live ? UNIT_COLOR[unit.state] : sameHouse ? '#d6dade' : '#dfe3e7');
+    if (m.material.emissive) {
+      m.material.emissive.set(isSel ? '#171A20' : isHot ? UNIT_COLOR[unit.state] : '#000000');
+      m.material.emissiveIntensity = isHot ? .45 : 1;
+    }
+    m.material.opacity = 1;
+    m.material.transparent = false;
+    m.material.depthWrite = true;
+    m.material.needsUpdate = true;
+  });
+}
+
+function loop() {
+  raf = requestAnimationFrame(loop);
+  if (!renderer) return;
+  ['theta','phi','dist','tx','ty','tz'].forEach(k => cam[k] += (want[k] - cam[k]) * .09);
+  const x = cam.tx + cam.dist * Math.sin(cam.phi) * Math.sin(cam.theta);
+  const y = cam.ty + cam.dist * Math.cos(cam.phi);
+  const z = cam.tz + cam.dist * Math.sin(cam.phi) * Math.cos(cam.theta);
+  camera.position.set(x, y, z);
+  camera.lookAt(cam.tx, cam.ty, cam.tz);
+  renderer.render(scene, camera);
+  const b = renderer.domElement.getBoundingClientRect();
+  labelEls.forEach(l => {
+    const v = l.pos.clone().project(camera);
+    l.node.style.left = ((v.x * .5 + .5) * b.width) + 'px';
+    l.node.style.top = ((-v.y * .5 + .5) * b.height) + 'px';
+    l.node.style.opacity = v.z < 1 ? 1 : 0;
+  });
+}
+
+/* ---------- panel ---------- */
+function renderProjectList() {
+  const wrap = el('projectList');
+  wrap.innerHTML = '';
+  PROJECTS.forEach(p => {
+    const r = document.createElement('div');
+    r.className = 'row';
+    r.dataset.id = p.id;
+    r.onmouseenter = () => previewProject(p.id);
+    r.onmouseleave = () => previewProject(null);
+    r.innerHTML = '<div style="display:flex;flex-direction:column;gap:2px"><span class="code">' + p.name + '</span><span class="meta">' + p.loc.toUpperCase() + '</span></div><span class="meta">' + p.houses + ' buildings</span>';
+    r.onclick = () => flyTo(p);
+    wrap.appendChild(r);
+  });
+}
+
+function renderPanel() {
+  const p = state.project;
+  if (!p) return;
+  const focused = state.house >= 0;
+  el('floorWrap').style.display = focused ? 'flex' : 'none';
+  el('units').style.display = focused ? 'flex' : 'none';
+  el('unitDetail').style.display = state.unit ? 'flex' : 'none';
+  el('projectList').style.display = 'none';
+
+  if (!focused) {
+    el('units').innerHTML = '';
+    const wrap = document.createElement('div');
+    p.data.forEach((h, hi) => {
+      const avail = h.floors.flatMap(f => f.units).filter(u => u.state === 'available').length;
+      const r = document.createElement('div');
+      r.className = 'row';
+      r.innerHTML = '<div style="display:flex;flex-direction:column;gap:2px"><span class="code">Building ' + h.letter + '</span><span class="meta">' + h.floors.length + ' floors</span></div><span class="meta">' + avail + ' available</span>';
+      r.onclick = () => focusHouse(hi, 0);
+      wrap.appendChild(r);
+    });
+    el('units').appendChild(wrap);
+    el('units').style.display = 'flex';
+    return;
+  }
+
+  const house = p.data[state.house];
+  el('floors').innerHTML = '';
+  house.floors.forEach((_, fi) => {
+    const b = document.createElement('button');
+    b.textContent = fi + 1;
+    const on = fi === state.floor;
+    b.style.cssText = 'width:40px;height:40px;border-radius:var(--radius-control);cursor:pointer;transition:var(--transition-control);font:500 14px/1 var(--font-text);border:1px solid ' + (on ? '#13B5CA' : 'var(--pale-silver)') + ';background:' + (on ? '#13B5CA' : '#fff') + ';color:' + (on ? '#fff' : 'var(--graphite)');
+    b.onclick = () => selectFloor(fi);
+    el('floors').appendChild(b);
+  });
+
+  el('units').innerHTML = '';
+  house.floors[state.floor].units.forEach(u => {
+    const r = document.createElement('div');
+    r.className = 'row';
+    const dot = '<i style="width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:' + STATUS[u.state].color + '"></i>';
+    r.innerHTML = '<div style="display:flex;align-items:center;gap:10px">' + dot +
+      '<div style="display:flex;flex-direction:column;gap:2px"><span class="code">' + u.code + '</span>' +
+      '<span class="meta">' + u.label + ' · ' + u.area + ' m² · ' + ASPECT[u.aspect] + '</span></div></div>' +
+      '<div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end"><span class="code">' + (u.state === 'sold' ? '—' : fmt(u.price)) + '</span><span class="meta" style="color:' + STATUS[u.state].color + '">' + STATUS[u.state].label + '</span></div>';
+    if (u.state === 'sold') {
+      r.style.cursor = 'not-allowed';
+      r.style.opacity = '.55';
+    } else {
+      r.onclick = () => { state.unit = u; paint(); renderDetail(); };
+    }
+    el('units').appendChild(r);
+  });
+}
+
+function renderDetail() {
+  const u = state.unit, h = state.project.data[state.house];
+  el('uCode').textContent = 'Apartment ' + u.code;
+  el('uMeta').textContent = 'Building ' + h.letter + ' · floor ' + (state.floor + 1) + ' · ' + u.label + ' · ' + u.area + ' m² · ' + ASPECT[u.aspect] + ' · ' + u.balcony;
+  el('uPrice').textContent = u.state === 'sold' ? 'Sold' : fmt(u.price);
+  el('uStatus').textContent = STATUS[u.state].label;
+  el('uStatus').style.color = STATUS[u.state].color;
+  el('unitDetail').style.display = 'flex';
+}
+
+el('backMap').onclick = resetMap;
+el('backSite').onclick = unfocus;
+el('uApply').onclick = () => { try { parent.postMessage({ type: 'piche-apply', unit: state.unit }, '*'); } catch (e) {} };
+el('uPlan').onclick = () => {};
+window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
+</script>
+</body>
+</html>

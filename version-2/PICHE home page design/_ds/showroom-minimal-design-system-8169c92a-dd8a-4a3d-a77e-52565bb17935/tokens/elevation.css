@@ -1,0 +1,11 @@
+:root{
+/* Elevation is deliberately near-absent: layering comes from z-index, opacity and photography. */
+--elevation-flat:none;
+--elevation-frost:var(--frosted-white);
+--elevation-overlay:var(--overlay-gray);
+--elevation-subtle:0 1px 3px rgba(0,0,0,0.05);
+--blur-frost:blur(12px); /* @kind other */
+--z-nav:100; /* @kind other */
+--z-overlay:200; /* @kind other */
+--z-chatbar:150; /* @kind other */
+}
