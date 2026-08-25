@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { Wordmark } from "@/components/piche/wordmark";
 import { SearchBar } from "@/components/piche/search-bar";
 import { LangSwitch } from "@/components/piche/lang-switch";
@@ -14,6 +15,9 @@ const NAV_LINKS = [
   { href: "#news", label: "News" },
   { href: "#contacts", label: "Contacts" },
 ];
+
+// TODO: point at the deployed chooser URL once each version has its own domain.
+const CHOOSER_URL = "http://localhost:8080/";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -43,6 +47,14 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex h-(--nav-height) max-w-(--container-max) items-center gap-(--space-lg) px-(--container-pad)">
+        <a
+          href={CHOOSER_URL}
+          className="flex shrink-0 items-center gap-(--space-xs) text-(length:--body-sm-size) font-semibold text-(--text-mute) transition-colors duration-(--duration-base) hover:text-(--brand-primary)"
+        >
+          <ArrowLeft className="size-4" />
+          Versions
+        </a>
+        <span className="h-5 w-px shrink-0 bg-(--border-hairline)" />
         <Link href="#top" className="flex shrink-0 items-center">
           <Wordmark text="PICHE" size={26} />
         </Link>

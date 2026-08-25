@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { PicheButton } from "@/components/piche/piche-button";
 import { PinOverlayPill } from "@/components/piche/pin-overlay-pill";
-import { PhotoCredit } from "@/components/piche/photo-credit";
 
 export function HeroSection() {
   return (
@@ -33,7 +32,7 @@ export function HeroSection() {
         className="group relative aspect-21/9 overflow-hidden rounded-(--radius-lg-ds) bg-(--surface-dark)"
       >
         <Image
-          src="https://images.unsplash.com/photo-1755103114153-eb0a66e3725a?fm=jpg&q=70&w=2000&auto=format&fit=crop"
+          src="/hero.png"
           alt="All PICHE projects in one video"
           fill
           sizes="(min-width: 1280px) 1232px, 100vw"
@@ -48,10 +47,6 @@ export function HeroSection() {
             Intro video · all of our projects in one video
           </PinOverlayPill>
         </div>
-        <PhotoCredit
-          credit="Photo by Haberdoedas on Unsplash"
-          href="https://unsplash.com/@haberdoedas"
-        />
       </section>
     </>
   );

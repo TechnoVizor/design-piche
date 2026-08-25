@@ -1,5 +1,5 @@
 import { DsButton } from "./ds-button";
-import { ImageSlot, PhotoCredit } from "./image-slot";
+import { ImageSlot } from "./image-slot";
 import { PHOTOS } from "@/lib/piche-data";
 
 export function HeroSection() {
@@ -13,7 +13,6 @@ export function HeroSection() {
           priority
         />
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/72 from-0% via-black/42 via-42% to-black/12 to-100%" />
-        <PhotoCredit photo={PHOTOS.facadeDark} />
       </div>
       <div className="pointer-events-none absolute inset-0 mx-auto flex max-w-(--container-max) flex-col justify-end gap-6 px-8 pb-[88px]">
         <h1 className="type-hero max-w-[900px] text-pretty text-(--text-on-dark)">

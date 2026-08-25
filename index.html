@@ -5,109 +5,267 @@
 <title>PICHE — choose a design</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700&display=swap");
   :root{
-    --brand-primary:#435ee5;
-    --text-primary:#000;
-    --text-mute:#62625b;
-    --surface-canvas:#fff;
-    --surface-soft:#fbfbf9;
-    --surface-card:#f6f6f3;
-    --border-hairline:#dadad3;
+    --ink:#111;
+    --mute:#6b6b6b;
+    --line:#e2e2e2;
+    --bg:#f4f4f4;
+    --card:#ffffff;
+    --ease:cubic-bezier(.16,1,.3,1);
   }
   *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
   body{
-    margin:0;
     min-height:100vh;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:48px;
-    background:var(--surface-soft);
-    color:var(--text-primary);
-    font-family:"Inter",-apple-system,system-ui,sans-serif;
-    padding:48px 24px;
+    gap:32px;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
+    padding:40px 24px;
+    overflow-x:hidden;
   }
-  h1{
-    margin:0;
+
+  header{
     text-align:center;
-    font-family:"Manrope",sans-serif;
-    font-weight:700;
-    font-size:32px;
-    letter-spacing:-0.6px;
-  }
-  p.lede{
-    margin:0;
-    text-align:center;
-    color:var(--text-mute);
-    font-size:16px;
-    max-width:480px;
-  }
-  .cards{
-    display:grid;
-    grid-template-columns:repeat(2, minmax(0, 280px));
-    gap:24px;
-  }
-  @media (max-width: 640px){
-    .cards{grid-template-columns:minmax(0, 320px)}
-  }
-  .card{
     display:flex;
     flex-direction:column;
-    gap:8px;
-    padding:32px;
-    border-radius:16px;
-    background:var(--surface-card);
-    color:inherit;
-    text-decoration:none;
-    transition:background 160ms cubic-bezier(.2,.6,.2,1);
+    gap:6px;
+    transition:opacity .3s var(--ease);
   }
-  .card:hover{background:#efeee7}
-  .card[aria-disabled="true"]{
-    pointer-events:none;
-    opacity:.55;
+  header h1{
+    margin:0;
+    font-size:22px;
+    font-weight:600;
+    letter-spacing:-0.2px;
   }
-  .card .eyebrow{
-    font-size:12px;
-    font-weight:500;
-    color:var(--text-mute);
-    text-transform:uppercase;
-    letter-spacing:.04em;
-  }
-  .card .name{
-    font-size:20px;
-    font-weight:700;
-  }
-  .card .desc{
+  header p{
+    margin:0;
     font-size:14px;
-    color:var(--text-mute);
-    line-height:1.4;
+    color:var(--mute);
   }
-  .card .go{
-    margin-top:8px;
+
+  .stage{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    width:100%;
+    max-width:1180px;
+  }
+  .divider{
+    flex:0 0 auto;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.08em;
+    color:var(--mute);
+    text-transform:uppercase;
+    transition:opacity .3s var(--ease);
+  }
+
+  .pane{
+    flex:1 1 0;
+    min-width:0;
+    height:min(640px, 74vh);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    cursor:pointer;
+    border-radius:14px;
+    background:transparent;
+  }
+  .pane .window{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    border-radius:14px;
+    overflow:hidden;
+    background:var(--card);
+    border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(0,0,0,.04);
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s var(--ease);
+  }
+  .pane:hover .window,
+  .pane:focus-visible .window{
+    transform:translateY(-4px);
+    box-shadow:0 24px 48px -20px rgba(0,0,0,.22);
+    border-color:#d3d3d3;
+  }
+  .pane:focus-visible{outline:2px solid #111;outline-offset:4px}
+
+  .titlebar{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    height:38px;
+    padding:0 12px;
+    background:#ececec;
+    border-bottom:1px solid var(--line);
+    transition:opacity .28s var(--ease);
+  }
+  .dots{display:flex;gap:6px}
+  .dots i{width:8px;height:8px;border-radius:50%;background:#c9c9c9;display:block}
+  .addr{
+    flex:1;
+    min-width:0;
+    height:22px;
+    display:flex;
+    align-items:center;
+    padding:0 10px;
+    border-radius:6px;
+    background:#fff;
+    border:1px solid var(--line);
+    font-size:11px;
+    color:var(--mute);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .frame{flex:1;overflow:hidden;background:#fff}
+  .frame iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+    pointer-events:none;
+  }
+
+  .label{
+    text-align:center;
     font-size:14px;
     font-weight:600;
-    color:var(--brand-primary);
+    color:var(--ink);
+    transition:opacity .28s var(--ease);
+  }
+
+  /* Opening state: pane is lifted out of flow and expanded to fill the
+     viewport; everything else fades away so the destination reads as
+     already-arrived, not just "a card got bigger." */
+  .pane.opening{
+    position:fixed;
+    z-index:20;
+    margin:0;
+    transition:top .55s var(--ease), left .55s var(--ease),
+      width .55s var(--ease), height .55s var(--ease);
+  }
+  .pane.opening .window{
+    border-radius:0;
+    border-color:transparent;
+    box-shadow:none;
+    transform:none;
+    transition:border-radius .4s var(--ease), box-shadow .3s var(--ease);
+  }
+  .pane.opening .titlebar,
+  .pane.opening .label{opacity:0}
+
+  .fade-out{opacity:0}
+
+  @media (max-width:860px){
+    .stage{flex-direction:column}
+    .pane{width:100%;height:min(420px,54vh)}
+    .divider{padding:2px 0}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .pane .window,.titlebar,.label,.divider,header,.pane.opening{transition:none !important}
   }
 </style>
 </head>
 <body>
-  <h1>PICHE — choose a design</h1>
-  <p class="lede">Two implementations of the PICHE home page are being built for review. Pick one to preview.</p>
-  <div class="cards">
-    <a class="card" href="/version-1/">
-      <span class="eyebrow">Version 1</span>
-      <span class="name">React · Next.js · shadcn/ui</span>
-      <span class="desc">Built from the PICHE Home Page design file, including the interactive 3D building explorer.</span>
-      <span class="go">Preview →</span>
-    </a>
-    <a class="card" href="/version-2/" aria-disabled="true">
-      <span class="eyebrow">Version 2</span>
-      <span class="name">In progress</span>
-      <span class="desc">A second implementation is being built separately for comparison.</span>
-      <span class="go">Coming soon</span>
-    </a>
+  <header>
+    <h1>Choose a version</h1>
+    <p>Two builds of the PICHE home page. Pick one to open it.</p>
+  </header>
+
+  <div class="stage">
+    <div class="pane" role="button" tabindex="0" data-url="http://localhost:3000/" aria-label="Open Version 1">
+      <div class="window">
+        <div class="titlebar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="addr">localhost:3000</span>
+        </div>
+        <div class="frame">
+          <iframe src="http://localhost:3000/" title="Version 1 preview" tabindex="-1"></iframe>
+        </div>
+      </div>
+      <span class="label">Version 1</span>
+    </div>
+
+    <span class="divider" aria-hidden="true">or</span>
+
+    <div class="pane" role="button" tabindex="0" data-url="http://localhost:4300/" aria-label="Open Version 2">
+      <div class="window">
+        <div class="titlebar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="addr">localhost:4300</span>
+        </div>
+        <div class="frame">
+          <iframe src="http://localhost:4300/" title="Version 2 preview" tabindex="-1"></iframe>
+        </div>
+      </div>
+      <span class="label">Version 2</span>
+    </div>
   </div>
+
+  <script>
+    // NOTE: swap these for the real deployed URLs once each version has
+    // its own Vercel project — these are the local dev ports.
+    var panes = document.querySelectorAll('.pane');
+    var opening = false;
+
+    function openPane(pane) {
+      if (opening) return;
+      opening = true;
+      var url = pane.getAttribute('data-url');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reduce) {
+        window.location.href = url;
+        return;
+      }
+
+      var rect = pane.getBoundingClientRect();
+      panes.forEach(function (p) {
+        if (p !== pane) p.classList.add('fade-out');
+      });
+      document.querySelector('header').classList.add('fade-out');
+      document.querySelector('.divider').classList.add('fade-out');
+
+      pane.style.top = rect.top + 'px';
+      pane.style.left = rect.left + 'px';
+      pane.style.width = rect.width + 'px';
+      pane.style.height = rect.height + 'px';
+      pane.classList.add('opening');
+
+      // Force layout so the browser registers the starting rect before we
+      // animate to the full-viewport target on the next frame.
+      pane.getBoundingClientRect();
+
+      requestAnimationFrame(function () {
+        pane.style.top = '0px';
+        pane.style.left = '0px';
+        pane.style.width = '100vw';
+        pane.style.height = '100vh';
+      });
+
+      setTimeout(function () {
+        window.location.href = url;
+      }, 600);
+    }
+
+    panes.forEach(function (pane) {
+      pane.addEventListener('click', function () { openPane(pane); });
+      pane.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openPane(pane);
+        }
+      });
+    });
+  </script>
 </body>
 </html>

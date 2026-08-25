@@ -9,9 +9,9 @@ export type Photo = {
 
 export const PHOTOS = {
   facadeDark: {
-    src: "https://images.unsplash.com/photo-1755103114153-eb0a66e3725a?fm=jpg&q=70&w=2000&auto=format&fit=crop",
-    credit: "Photo by Haberdoedas on Unsplash",
-    creditHref: "https://unsplash.com/@haberdoedas",
+    src: "/hero.png",
+    credit: "",
+    creditHref: "",
   },
   balconies: {
     src: "https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?fm=jpg&q=70&w=1400&auto=format&fit=crop",
