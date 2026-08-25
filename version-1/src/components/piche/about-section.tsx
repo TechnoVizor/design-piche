@@ -1,0 +1,70 @@
+import Image from "next/image";
+import { PhotoCredit } from "@/components/piche/photo-credit";
+
+const STATS = [
+  { value: "200+", label: "buildings designed and developed" },
+  { value: "6M m²", label: "total developed area" },
+  { value: "300+", label: "professionals in the team" },
+];
+
+export function AboutSection() {
+  return (
+    <section id="about" className="pt-(--space-section)">
+      <div className="grid grid-cols-1 items-center gap-(--space-section) rounded-(--radius-lg-ds) bg-(--surface-card) p-(--space-xxl) lg:grid-cols-2">
+        <div className="flex flex-col gap-(--space-lg)">
+          <h2
+            className="m-0 font-(family-name:--font-display) text-(length:--display-lg-size) font-bold text-(--text-primary)"
+            style={{ letterSpacing: "-0.8px" }}
+          >
+            Real estate developer in Latvia
+          </h2>
+          <p className="m-0 text-(length:--body-md-size) leading-[1.4] text-(--text-body)">
+            <a href="https://piche.eu" className="font-semibold">
+              PICHE
+            </a>{" "}
+            is a leading real estate developer in Latvia with more than 20
+            years of experience, offering high-quality apartments, flats and
+            homes for modern living. The company also designs, builds and
+            manages business parks, industrial buildings, warehouses,
+            logistics and production facilities, offices, apartment buildings
+            and row houses.
+          </p>
+          <div className="flex gap-(--space-section)">
+            {STATS.map((s) => (
+              <div key={s.label} className="flex flex-col gap-(--space-xxs)">
+                <span
+                  className="font-(family-name:--font-display) text-(length:--display-lg-size) font-bold text-(--text-primary)"
+                  style={{ letterSpacing: "-0.8px" }}
+                >
+                  {s.value}
+                </span>
+                <span className="text-(length:--body-sm-size) text-(--text-mute)">
+                  {s.label}
+                </span>
+              </div>
+            ))}
+          </div>
+          <a
+            href="https://piche.eu"
+            className="text-(length:--link-md-size) font-semibold text-(--text-link)"
+          >
+            More about PICHE at piche.eu →
+          </a>
+        </div>
+        <div className="relative aspect-4/3 overflow-hidden rounded-(--radius-md-ds) bg-(--surface-secondary)">
+          <Image
+            src="https://images.unsplash.com/photo-1757970326337-95d7cca56fa1?auto=format&fit=crop&crop=entropy&q=70&w=1200&h=900"
+            alt="PICHE site"
+            fill
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="object-cover"
+          />
+          <PhotoCredit
+            credit="Photo by Sebastian Schuster on Unsplash"
+            href="https://unsplash.com/@sschusterphotoart"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}

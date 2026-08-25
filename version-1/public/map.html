@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Priežu Rezidences — Mežciema iela, Mārupe</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: #f6f6f3; }
+  #map { height: 100%; width: 100%; font-family: Inter, system-ui, sans-serif; }
+  .leaflet-container { background: #f6f6f3; }
+  .pin-label { font: 600 13px Inter, system-ui, sans-serif; color: #33332e; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  var site = [56.9165, 23.9450];
+  var map = L.map('map', { scrollWheelZoom: false }).setView(site, 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors', maxZoom: 19
+  }).addTo(map);
+  L.circleMarker(site, {
+    radius: 9, color: '#435ee5', weight: 3, fillColor: '#ffffff', fillOpacity: 1
+  }).addTo(map).bindTooltip('Priežu Rezidences · Mežciema iela, Mārupe', {
+    permanent: true, direction: 'right', offset: [10, 0], className: 'pin-label'
+  });
+  L.circleMarker([56.9060, 23.9770], { radius: 5, color: '#62625b', weight: 2, fillColor: '#fff', fillOpacity: 1 })
+    .addTo(map).bindTooltip('Mārupe', { permanent: true, direction: 'right', offset: [8, 0], className: 'pin-label' });
+  L.circleMarker([56.9496, 24.1052], { radius: 5, color: '#62625b', weight: 2, fillColor: '#fff', fillOpacity: 1 })
+    .addTo(map).bindTooltip('Rīga centre', { permanent: true, direction: 'left', offset: [-8, 0], className: 'pin-label' });
+</script>
+</body>
+</html>

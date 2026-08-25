@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PICHE — choose a design</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700&display=swap");
+  :root{
+    --brand-primary:#435ee5;
+    --text-primary:#000;
+    --text-mute:#62625b;
+    --surface-canvas:#fff;
+    --surface-soft:#fbfbf9;
+    --surface-card:#f6f6f3;
+    --border-hairline:#dadad3;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:48px;
+    background:var(--surface-soft);
+    color:var(--text-primary);
+    font-family:"Inter",-apple-system,system-ui,sans-serif;
+    padding:48px 24px;
+  }
+  h1{
+    margin:0;
+    text-align:center;
+    font-family:"Manrope",sans-serif;
+    font-weight:700;
+    font-size:32px;
+    letter-spacing:-0.6px;
+  }
+  p.lede{
+    margin:0;
+    text-align:center;
+    color:var(--text-mute);
+    font-size:16px;
+    max-width:480px;
+  }
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 280px));
+    gap:24px;
+  }
+  @media (max-width: 640px){
+    .cards{grid-template-columns:minmax(0, 320px)}
+  }
+  .card{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:32px;
+    border-radius:16px;
+    background:var(--surface-card);
+    color:inherit;
+    text-decoration:none;
+    transition:background 160ms cubic-bezier(.2,.6,.2,1);
+  }
+  .card:hover{background:#efeee7}
+  .card[aria-disabled="true"]{
+    pointer-events:none;
+    opacity:.55;
+  }
+  .card .eyebrow{
+    font-size:12px;
+    font-weight:500;
+    color:var(--text-mute);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .card .name{
+    font-size:20px;
+    font-weight:700;
+  }
+  .card .desc{
+    font-size:14px;
+    color:var(--text-mute);
+    line-height:1.4;
+  }
+  .card .go{
+    margin-top:8px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--brand-primary);
+  }
+</style>
+</head>
+<body>
+  <h1>PICHE — choose a design</h1>
+  <p class="lede">Two implementations of the PICHE home page are being built for review. Pick one to preview.</p>
+  <div class="cards">
+    <a class="card" href="/version-1/">
+      <span class="eyebrow">Version 1</span>
+      <span class="name">React · Next.js · shadcn/ui</span>
+      <span class="desc">Built from the PICHE Home Page design file, including the interactive 3D building explorer.</span>
+      <span class="go">Preview →</span>
+    </a>
+    <a class="card" href="/version-2/" aria-disabled="true">
+      <span class="eyebrow">Version 2</span>
+      <span class="name">In progress</span>
+      <span class="desc">A second implementation is being built separately for comparison.</span>
+      <span class="go">Coming soon</span>
+    </a>
+  </div>
+</body>
+</html>
