@@ -1,6 +1,6 @@
 export function ExploreSection() {
   return (
-    <section id="explore" className="bg-(--surface-alt) py-16">
+    <section id="explore" className="scroll-mt-16 bg-(--surface-alt) py-16">
       <div className="mx-auto max-w-(--container-max) px-8">
         <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
           <h2 className="type-section text-(--text-heading)">

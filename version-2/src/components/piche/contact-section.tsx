@@ -10,25 +10,25 @@ export function ContactSection() {
   const [sent, setSent] = useState(false);
 
   return (
-    <section id="contacts" className="bg-(--carbon-dark) py-16">
+    <section id="contacts" className="scroll-mt-16 bg-(--carbon-dark) py-16">
       <div className="mx-auto grid max-w-(--container-max) grid-cols-1 gap-16 px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
         <div className="flex flex-col gap-8">
           <h2 className="type-hero text-(--text-on-dark)">Contacts</h2>
           <div className="flex flex-col gap-2">
-            <span className="text-[17px]/[24px] font-medium tracking-[0.24em] text-(--text-on-dark)">
-              V ā r d s U z v ā r d s
+            <span className="text-[17px]/[24px] font-medium text-(--text-on-dark)">
+              Sales team
             </span>
             <a
               href="tel:+37122333333"
-              className="text-[15px]/[24px] tracking-[0.16em] text-(--pale-silver)"
+              className="text-[15px]/[24px] text-(--pale-silver)"
             >
-              + 3 7 1 2 2 3 3 3 3 3 3 3 3
+              +371 22 333 333
             </a>
             <a
               href="mailto:info@piche.eu"
               className="text-[15px]/[24px] text-(--pale-silver)"
             >
-              e - m a i l
+              info@piche.eu
             </a>
           </div>
           <div className="flex flex-col gap-2 border-t border-(--graphite) pt-(--space-3)">

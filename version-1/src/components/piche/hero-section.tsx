@@ -33,7 +33,7 @@ export function HeroSection() {
         className="group relative aspect-21/9 overflow-hidden rounded-(--radius-lg-ds) bg-(--surface-dark)"
       >
         <Image
-          src="https://images.unsplash.com/photo-1759845565036-cbecbcfcb8e2?auto=format&fit=crop&crop=entropy&q=70&w=1680&h=720"
+          src="https://images.unsplash.com/photo-1755103114153-eb0a66e3725a?fm=jpg&q=70&w=2000&auto=format&fit=crop"
           alt="All PICHE projects in one video"
           fill
           sizes="(min-width: 1280px) 1232px, 100vw"
@@ -49,8 +49,8 @@ export function HeroSection() {
           </PinOverlayPill>
         </div>
         <PhotoCredit
-          credit="Photo by Joachim Lesne on Unsplash"
-          href="https://unsplash.com/@joaching"
+          credit="Photo by Haberdoedas on Unsplash"
+          href="https://unsplash.com/@haberdoedas"
         />
       </section>
     </>

@@ -4,7 +4,7 @@ export function BanksSection() {
   return (
     <section
       id="banks"
-      className="mx-auto flex max-w-(--container-max) flex-col gap-8 px-8 py-16"
+      className="mx-auto flex scroll-mt-16 max-w-(--container-max) flex-col gap-8 px-8 py-16"
     >
       <div className="flex flex-col gap-2">
         <h2 className="type-section text-(--text-heading)">Choose a bank</h2>

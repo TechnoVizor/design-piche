@@ -3,7 +3,7 @@ import { NEWS, SOCIAL } from "@/lib/piche-data";
 
 export function NewsSection() {
   return (
-    <section id="news" className="bg-(--surface-alt) py-16">
+    <section id="news" className="scroll-mt-16 bg-(--surface-alt) py-16">
       <div className="mx-auto max-w-(--container-max) px-8">
         <div className="mb-8 flex items-baseline justify-between gap-8">
           <h2 className="type-section text-(--text-heading)">News</h2>
@@ -16,7 +16,7 @@ export function NewsSection() {
             <a
               key={n.title}
               href="#news"
-              className="block overflow-hidden rounded-(--radius-card) bg-(--white)"
+              className="group block overflow-hidden rounded-(--radius-card) bg-(--white)"
             >
               <div className="relative aspect-video">
                 <ImageSlot
@@ -49,7 +49,7 @@ export function NewsSection() {
               <a
                 key={i}
                 href="#news"
-                className="relative block aspect-square overflow-hidden rounded-(--radius-card)"
+                className="group relative block aspect-square overflow-hidden rounded-(--radius-card)"
               >
                 <ImageSlot
                   photo={s.photo}

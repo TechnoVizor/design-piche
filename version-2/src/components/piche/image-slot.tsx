@@ -21,7 +21,7 @@ export function ImageSlot({
       fill
       sizes={sizes}
       priority={priority}
-      className="object-cover"
+      className="object-cover transition-transform duration-700 ease-(--ease-link) group-hover:scale-105"
     />
   );
 }

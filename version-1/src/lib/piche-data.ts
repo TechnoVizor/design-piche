@@ -15,9 +15,9 @@ export const PROJECTS: Project[] = [
     id: "project-1",
     href: "#explore",
     image:
-      "https://images.unsplash.com/photo-1768638687896-35bde623d532?auto=format&fit=crop&crop=entropy&q=70&w=900&h=900",
-    credit: "Photo by Maximilian Bungart on Unsplash",
-    creditHref: "https://unsplash.com/@hypernature",
+      "https://images.unsplash.com/photo-1757970326337-95d7cca56fa1?fm=jpg&q=70&w=900&auto=format&fit=crop",
+    credit: "Photo by Sebastian Schuster on Unsplash",
+    creditHref: "https://unsplash.com/@sschusterphotoart",
     location: "Mārupe",
     status: "In sales",
     name: "Priežu Rezidences apartments",
@@ -27,9 +27,9 @@ export const PROJECTS: Project[] = [
     id: "project-2",
     href: "#explore",
     image:
-      "https://images.unsplash.com/photo-1757372429876-ebeda13edfab?auto=format&fit=crop&crop=entropy&q=70&w=900&h=900",
-    credit: "Photo by Sebastian Schuster on Unsplash",
-    creditHref: "https://unsplash.com/@sschusterphotoart",
+      "https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?fm=jpg&q=70&w=900&auto=format&fit=crop",
+    credit: "Photo by Naksha Banwao on Unsplash",
+    creditHref: "https://unsplash.com/@nakshabanwao",
     location: "Mārupe",
     status: "In sales",
     name: "Priežu Rezidences row houses",
@@ -39,9 +39,9 @@ export const PROJECTS: Project[] = [
     id: "project-3",
     href: "#projects",
     image:
-      "https://images.unsplash.com/photo-1759845565036-cbecbcfcb8e2?auto=format&fit=crop&crop=right&q=70&w=900&h=900",
-    credit: "Photo by Joachim Lesne on Unsplash",
-    creditHref: "https://unsplash.com/@joaching",
+      "https://images.unsplash.com/photo-1757372429876-ebeda13edfab?fm=jpg&q=70&w=900&auto=format&fit=crop",
+    credit: "Photo by Sebastian Schuster on Unsplash",
+    creditHref: "https://unsplash.com/@sschusterphotoart",
     location: "Rīga",
     status: "Coming soon",
     name: "Mežaparka rezidences",
@@ -51,9 +51,9 @@ export const PROJECTS: Project[] = [
     id: "project-4",
     href: "#projects",
     image:
-      "https://images.unsplash.com/photo-1743878206228-5f36b5f5c830?auto=format&fit=crop&crop=entropy&q=70&w=900&h=900",
-    credit: "Photo by Sarlote Laura Jevdokimova on Unsplash",
-    creditHref: "https://unsplash.com/@laurlota",
+      "https://images.unsplash.com/photo-1757372429884-92e02350c5d9?fm=jpg&q=70&w=900&auto=format&fit=crop",
+    credit: "Photo by Sebastian Schuster on Unsplash",
+    creditHref: "https://unsplash.com/@sschusterphotoart",
     location: "Mārupe",
     status: "Coming soon",
     name: "Krūmiņsala 29",
@@ -65,27 +65,27 @@ export const NEWS = [
   {
     id: "news-1",
     image:
-      "https://images.unsplash.com/photo-1757372429876-ebeda13edfab?auto=format&fit=crop&crop=top&q=70&w=1200&h=900",
-    credit: "Photo by Sebastian Schuster on Unsplash",
-    creditHref: "https://unsplash.com/@sschusterphotoart",
+      "https://images.unsplash.com/photo-1628592102751-ba83b0314276?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    credit: "Photo by Huy Nguyen on Unsplash",
+    creditHref: "https://unsplash.com/@huynguyen_pch",
     date: "12 August 2026 · Priežu Rezidences",
     title: "Construction of the apartment building reaches the top floor",
   },
   {
     id: "news-2",
     image:
-      "https://images.unsplash.com/photo-1743878206228-5f36b5f5c830?auto=format&fit=crop&crop=entropy&q=70&w=1200&h=900",
-    credit: "Photo by Sarlote Laura Jevdokimova on Unsplash",
-    creditHref: "https://unsplash.com/@laurlota",
+      "https://images.unsplash.com/photo-1680416124510-5eae1beca412?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    credit: "Photo by Christian on Unsplash",
+    creditHref: "https://unsplash.com/@axcreativeagency",
     date: "28 July 2026 · Row houses",
     title: "First row house families move into the pine forest neighbourhood",
   },
   {
     id: "news-3",
     image:
-      "https://images.unsplash.com/photo-1768638687896-35bde623d532?auto=format&fit=crop&crop=top&q=70&w=1200&h=900",
-    credit: "Photo by Maximilian Bungart on Unsplash",
-    creditHref: "https://unsplash.com/@hypernature",
+      "https://images.unsplash.com/photo-1666282167632-c613fbeb163c?fm=jpg&q=70&w=1200&auto=format&fit=crop",
+    credit: "Photo by Lotus Design N Print on Unsplash",
+    creditHref: "https://unsplash.com/@lotusdnp",
     date: "6 July 2026 · Technology",
     title: "Smart home access by fingerprint recognition in every apartment",
   },
@@ -95,30 +95,30 @@ export const SOCIAL_IMAGES = [
   {
     id: "social-1",
     image:
-      "https://images.unsplash.com/photo-1757970326337-95d7cca56fa1?auto=format&fit=crop&crop=entropy&q=70&w=600&h=600",
-    credit: "Photo by Sebastian Schuster on Unsplash",
-    creditHref: "https://unsplash.com/@sschusterphotoart",
+      "https://images.unsplash.com/photo-1662454419716-c4c504728811?fm=jpg&q=70&w=600&auto=format&fit=crop",
+    credit: "Photo by mahmoud azmy on Unsplash",
+    creditHref: "https://unsplash.com/@mahmoud_azmy",
   },
   {
     id: "social-2",
     image:
-      "https://images.unsplash.com/photo-1759845565036-cbecbcfcb8e2?auto=format&fit=crop&crop=entropy&q=70&w=600&h=600",
-    credit: "Photo by Joachim Lesne on Unsplash",
-    creditHref: "https://unsplash.com/@joaching",
+      "https://images.unsplash.com/photo-1738168279272-c08d6dd22002?fm=jpg&q=70&w=600&auto=format&fit=crop",
+    credit: "Photo by Prydumano Design on Unsplash",
+    creditHref: "https://unsplash.com/@prydumanodesign",
   },
   {
     id: "social-3",
     image:
-      "https://images.unsplash.com/photo-1743878206228-5f36b5f5c830?auto=format&fit=crop&crop=top&q=70&w=600&h=600",
-    credit: "Photo by Sarlote Laura Jevdokimova on Unsplash",
-    creditHref: "https://unsplash.com/@laurlota",
+      "https://images.unsplash.com/photo-1682184805271-11671b7ecf4c?fm=jpg&q=70&w=600&auto=format&fit=crop",
+    credit: "Photo by Lumbardh Plluzhina on Unsplash",
+    creditHref: "https://unsplash.com/@bardhplluzhina",
   },
   {
     id: "social-4",
     image:
-      "https://images.unsplash.com/photo-1757372429876-ebeda13edfab?auto=format&fit=crop&crop=right&q=70&w=600&h=600",
-    credit: "Photo by Sebastian Schuster on Unsplash",
-    creditHref: "https://unsplash.com/@sschusterphotoart",
+      "https://images.unsplash.com/photo-1628592102751-ba83b0314276?fm=jpg&q=70&w=600&auto=format&fit=crop",
+    credit: "Photo by Huy Nguyen on Unsplash",
+    creditHref: "https://unsplash.com/@huynguyen_pch",
   },
 ];
 

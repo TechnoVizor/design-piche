@@ -3,7 +3,7 @@ import { PROJECTS } from "@/lib/piche-data";
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="mx-auto max-w-(--container-max) px-8 py-16">
+    <section id="projects" className="mx-auto scroll-mt-16 max-w-(--container-max) px-8 py-16">
       <div className="mb-8 flex items-baseline justify-between gap-8">
         <h2 className="type-section text-(--text-heading)">Living projects</h2>
         <a href="#projects" className="type-sublink text-(--text-tertiary)">
@@ -12,7 +12,7 @@ export function ProjectsSection() {
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {PROJECTS.map((p) => (
-          <a key={p.name} href="#explore" className="block">
+          <a key={p.name} href="#explore" className="group block">
             <div className="relative aspect-16/10 overflow-hidden rounded-(--radius-card) bg-(--surface-alt)">
               <ImageSlot
                 photo={p.photo}

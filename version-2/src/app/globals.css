@@ -112,25 +112,34 @@
   --action-primary-hover: #0f97a9;
 }
 
-body {
-  margin: 0;
-  background: var(--surface-page);
-  color: var(--text-body);
-  font-family: var(--font-text), system-ui, sans-serif;
-}
+/*
+ * Base element defaults belong in @layer base — anything left unlayered
+ * after `@import "tailwindcss"` outranks EVERY Tailwind utility class
+ * regardless of selector specificity (CSS cascade layers), which was
+ * silently forcing every <a> to --text-heading and breaking colored link
+ * utilities on dark sections (footer, contacts, hero).
+ */
+@layer base {
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-body);
+    font-family: var(--font-text), system-ui, sans-serif;
+  }
 
-a {
-  color: var(--text-heading);
-  text-decoration: none;
-}
+  a {
+    color: var(--text-heading);
+    text-decoration: none;
+  }
 
-a:hover {
-  color: var(--electric-blue);
-}
+  a:hover {
+    color: var(--electric-blue);
+  }
 
-input,
-textarea {
-  font-family: var(--font-text), system-ui, sans-serif;
+  input,
+  textarea {
+    font-family: var(--font-text), system-ui, sans-serif;
+  }
 }
 
 /* Type ladder helpers — `font` shorthands from the design file. */
@@ -170,4 +179,19 @@ textarea {
 }
 .type-credit {
   font: 400 10px/14px var(--font-text);
+}
+
+/* Smooth anchor scrolling — disabled outright for reduced-motion users
+   rather than left to jump, since an instant jump IS the reduced-motion
+   equivalent here. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

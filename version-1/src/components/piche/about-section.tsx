@@ -55,15 +55,15 @@ export function AboutSection() {
           className="relative aspect-4/3 overflow-hidden rounded-(--radius-md-ds) bg-(--surface-secondary)"
         >
           <Image
-            src="https://images.unsplash.com/photo-1757970326337-95d7cca56fa1?auto=format&fit=crop&crop=entropy&q=70&w=1200&h=900"
+            src="https://images.unsplash.com/photo-1682184805271-11671b7ecf4c?fm=jpg&q=70&w=1200&auto=format&fit=crop"
             alt="PICHE site"
             fill
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover"
           />
           <PhotoCredit
-            credit="Photo by Sebastian Schuster on Unsplash"
-            href="https://unsplash.com/@sschusterphotoart"
+            credit="Photo by Lumbardh Plluzhina on Unsplash"
+            href="https://unsplash.com/@bardhplluzhina"
           />
         </div>
       </div>

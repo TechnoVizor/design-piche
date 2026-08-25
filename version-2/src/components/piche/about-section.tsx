@@ -11,7 +11,7 @@ export function AboutSection() {
   return (
     <section
       id="about"
-      className="mx-auto grid max-w-(--container-max) grid-cols-1 items-center gap-16 px-8 py-16 lg:grid-cols-2"
+      className="mx-auto grid scroll-mt-16 max-w-(--container-max) grid-cols-1 items-center gap-16 px-8 py-16 lg:grid-cols-2"
     >
       <div className="relative aspect-4/3 overflow-hidden rounded-(--radius-card)">
         <ImageSlot
