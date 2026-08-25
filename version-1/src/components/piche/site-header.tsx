@@ -16,8 +16,7 @@ const NAV_LINKS = [
   { href: "#contacts", label: "Contacts" },
 ];
 
-// TODO: point at the deployed chooser URL once each version has its own domain.
-const CHOOSER_URL = "http://localhost:8080/";
+const CHOOSER_URL = "https://piche-chooser.vercel.app/";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
