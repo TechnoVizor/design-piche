@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/colors.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/typography.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/radii.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/motion.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/tokens/elevation.css">
+<link rel="stylesheet" href="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/styles.css">
+<script src="_ds/showroom-minimal-design-system-8169c92a-dd8a-4a3d-a77e-52565bb17935/_ds_bundle.js"></script>
+<script src="./image-slot.js"></script>
+<style>
+  :root { --electric-blue: #13B5CA; --action-primary: #13B5CA; --action-primary-hover: #0F97A9; }
+  body { margin: 0; background: var(--surface-page); color: var(--text-body); font-family: var(--font-text), system-ui, sans-serif; }
+  a { color: var(--text-heading); text-decoration: none; }
+  a:hover { color: var(--electric-blue); }
+  input, textarea { font-family: var(--font-text), system-ui, sans-serif; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: var(--surface-page)">
+
+  <header style="position: sticky; top: 0; z-index: 40; background: var(--frosted-white); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-divider)">
+    <div style="max-width: 1383px; margin: 0 auto; padding: 0 32px; box-sizing: border-box; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px">
+      <a href="#top" style="flex: 0 0 auto; display: flex; align-items: center; color: #13b5ca">
+        <svg viewBox="0 0 800 162" role="img" aria-label="PICHE" style="height: 22px; width: auto; display: block"><path fill="currentColor" fill-rule="evenodd" d="M0.0 0.0L156.0 0.0L175.0 4.0L184.0 9.0L190.0 15.0L195.0 24.0L197.0 32.0L197.0 71.0L194.0 82.0L188.0 89.0L188.0 91.0L182.0 96.0L161.0 103.0L30.0 103.0L30.0 162.0L0.0 162.0L0.0 0.0ZM216.0 0.0L246.0 0.0L246.0 162.0L215.0 161.0L216.0 0.0ZM306.0 0.0L431.0 0.0L431.0 27.0L305.0 27.0L300.0 29.0L295.0 36.0L295.0 126.0L300.0 133.0L305.0 135.0L431.0 135.0L431.0 162.0L307.0 162.0L287.0 158.0L273.0 149.0L267.0 139.0L264.0 126.0L265.0 29.0L270.0 17.0L276.0 10.0L289.0 3.0L306.0 0.0ZM450.0 0.0L481.0 1.0L481.0 63.0L597.0 63.0L597.0 1.0L628.0 0.0L628.0 162.0L597.0 161.0L597.0 90.0L481.0 90.0L481.0 161.0L450.0 162.0L450.0 0.0ZM647.0 0.0L800.0 0.0L800.0 27.0L677.0 27.0L677.0 63.0L794.0 63.0L793.0 90.0L677.0 90.0L677.0 135.0L800.0 135.0L800.0 162.0L646.0 161.0L647.0 0.0ZM31.0 27.0L30.0 77.0L153.0 77.0L161.0 75.0L166.0 69.0L166.0 35.0L163.0 30.0L157.0 27.0L31.0 27.0Z"></path></svg>
+      </a>
+      <nav style="display: flex; align-items: center; gap: 4px">
+        <a href="#projects" style="font: var(--type-nav-weight) var(--type-nav-size)/var(--type-nav-lh) var(--font-text); padding: 10px 14px; border-radius: var(--radius-control); color: var(--action-nav-text); white-space: nowrap" style-hover="background: var(--action-nav-hover-bg)">Projects</a>
+        <a href="#about" style="font: var(--type-nav-weight) var(--type-nav-size)/var(--type-nav-lh) var(--font-text); padding: 10px 14px; border-radius: var(--radius-control); color: var(--action-nav-text); white-space: nowrap" style-hover="background: var(--action-nav-hover-bg)">About us</a>
+        <a href="#news" style="font: var(--type-nav-weight) var(--type-nav-size)/var(--type-nav-lh) var(--font-text); padding: 10px 14px; border-radius: var(--radius-control); color: var(--action-nav-text); white-space: nowrap" style-hover="background: var(--action-nav-hover-bg)">News</a>
+        <a href="#contacts" style="font: var(--type-nav-weight) var(--type-nav-size)/var(--type-nav-lh) var(--font-text); padding: 10px 14px; border-radius: var(--radius-control); color: var(--action-nav-text); white-space: nowrap" style-hover="background: var(--action-nav-hover-bg)">Contacts</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 16px; flex: 1 1 auto; min-width: 0; justify-content: flex-end">
+        <div style="display: flex; align-items: center; gap: 8px; border: 1px solid var(--border-ui); border-radius: var(--radius-control); padding: 0 12px; height: 36px; max-width: 220px; min-width: 0; flex: 1 1 0; box-sizing: border-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--pewter)"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+          <input placeholder="Search projects, apartments" style="border: 0; outline: none; width: 100%; min-width: 0; font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-body)">
+        </div>
+        <div data-lang-menu="true" style="position: relative; flex: 0 0 auto">
+          <button onClick="{{ toggleLang }}" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border: 1px solid var(--border-ui); border-radius: var(--radius-control); background: var(--white); cursor: pointer; font: var(--type-nav-weight) var(--type-nav-size)/1 var(--font-text); color: var(--action-nav-text); transition: var(--transition-control)" style-hover="border-color: var(--electric-blue)">
+            {{ lang }}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div style="{{ langMenuStyle }}">
+            <sc-for list="{{ languages }}" as="l" hint-placeholder-count="3">
+              <button onClick="{{ l.select }}" style="{{ l.style }}">{{ l.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <a href="#contacts" style="flex: 0 0 auto"><x-import component-from-global-scope="ShowroomMinimalDesignSystem_8169c9.Button" width="auto" style="{{ headerCtaStyle }}" hint-size="120px,40px">Apply now</x-import></a>
+      </div>
+    </div>
+  </header>
+
+  <section id="top" style="position: relative; height: 720px; background: var(--carbon-dark); overflow: hidden">
+    <div style="position: absolute; inset: 0">
+      <image-slot id="piche-hero" shape="rect" src="https://images.unsplash.com/photo-1755103114153-eb0a66e3725a?fm=jpg&q=70&w=2000&auto=format&fit=crop" credit="Photo by Haberdoedas on Unsplash" credit-href="https://unsplash.com/@haberdoedas" placeholder="Drop the intro video still — all PICHE living projects"></image-slot>
+      <div style="position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.42) 42%, rgba(0, 0, 0, 0.12) 100%)"></div>
+      <div style="position: absolute; right: 8px; bottom: 8px; z-index: 2; display: flex; gap: 4px; font: 400 10px/14px var(--font-text); color: rgba(255, 255, 255, 0.72); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6)">
+            <span>Photo by</span><a href="https://unsplash.com/@haberdoedas" target="_blank" rel="noopener" style="color: rgba(255, 255, 255, 0.92)">Haberdoedas</a><span>on</span><a href="https://unsplash.com/?utm_source=piche&utm_medium=referral" target="_blank" rel="noopener" style="color: rgba(255, 255, 255, 0.92)">Unsplash</a>
+          </div>
+    </div>
+    <div style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 24px; max-width: 1383px; margin: 0 auto; padding: 0 32px 88px; pointer-events: none">
+      <h1 style="margin: 0; max-width: 900px; font: var(--type-hero-weight) var(--type-hero-size)/var(--type-hero-lh) var(--font-display), sans-serif; color: var(--text-on-dark); text-wrap: pretty">New Apartments for Sale – Energy-Efficient Homes in a Modern Living Environment</h1>
+      <p style="margin: 0; max-width: 720px; font: var(--type-promo-weight) var(--type-promo-size)/30px var(--font-text); color: var(--pale-silver); text-wrap: pretty">Choose your home in new developments across Rīga, Mārupe and the surrounding areas</p>
+      <div style="display: flex; gap: 16px; align-items: center; pointer-events: auto">
+        <a href="#projects"><x-import component-from-global-scope="ShowroomMinimalDesignSystem_8169c9.Button" width="auto" hint-size="150px,40px">View projects</x-import></a>
+        <a href="#explore"><x-import component-from-global-scope="ShowroomMinimalDesignSystem_8169c9.Button" variant="secondary-translucent" width="auto" hint-size="150px,40px">Explore in 3D</x-import></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" style="max-width: 1383px; margin: 0 auto; padding: 64px 32px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 32px; margin-bottom: 32px">
+      <h2 style="margin: 0; font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">Living projects</h2>
+      <a href="#projects" style="font: var(--type-sublink-weight) var(--type-sublink-size)/var(--type-sublink-lh) var(--font-text); color: var(--text-tertiary)">All projects</a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+        <a href="#explore" style="display: block">
+          <div style="position: relative; border-radius: var(--radius-card); overflow: hidden; background: var(--surface-alt); aspect-ratio: 16 / 10">
+            <image-slot id="{{ p.slotId }}" shape="rect" src="{{ p.src }}" credit="{{ p.credit }}" credit-href="{{ p.creditHref }}" placeholder="{{ p.label }}"></image-slot>
+            <div style="position: absolute; right: 8px; bottom: 8px; z-index: 2; padding: 3px 6px; border-radius: 4px; background: rgba(0, 0, 0, 0.45); font: 400 10px/14px var(--font-text); color: rgba(255, 255, 255, 0.92)">{{ p.credit }}</div>
+          </div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 16px 0 0">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <span style="font: var(--type-product-weight) var(--type-product-size)/var(--type-product-lh) var(--font-text); color: var(--text-heading)">{{ p.name }}</span>
+              <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary); letter-spacing: 0.12em">{{ p.location }}</span>
+            </div>
+            <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--electric-blue)">{{ p.status }}</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="explore" style="background: var(--surface-alt); padding: 64px 0">
+    <div style="max-width: 1383px; margin: 0 auto; padding: 0 32px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 32px; margin-bottom: 8px">
+        <h2 style="margin: 0; font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">Find your home on the map</h2>
+        <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">Open a project, rotate the buildings, pick a floor and an apartment.</span>
+      </div>
+      <iframe src="piche-explorer.html" title="PICHE project explorer" style="width: 100%; height: 640px; border: 0; border-radius: var(--radius-card); margin-top: 32px; background: var(--white)"></iframe>
+    </div>
+  </section>
+
+  <section id="about" style="max-width: 1383px; margin: 0 auto; padding: 64px 32px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center">
+    <div style="position: relative; border-radius: var(--radius-card); overflow: hidden; aspect-ratio: 4 / 3">
+      <image-slot id="piche-about" shape="rect" src="https://images.unsplash.com/photo-1682184805271-11671b7ecf4c?fm=jpg&q=70&w=1400&auto=format&fit=crop" credit="Photo by Lumbardh Plluzhina on Unsplash" credit-href="https://unsplash.com/@bardhplluzhina" placeholder="Drop the company film still"></image-slot>
+      <div style="position: absolute; right: 8px; bottom: 8px; z-index: 2; display: flex; gap: 4px; font: 400 10px/14px var(--font-text); color: rgba(255, 255, 255, 0.72); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6)">
+            <span>Photo by</span><a href="https://unsplash.com/@bardhplluzhina" target="_blank" rel="noopener" style="color: rgba(255, 255, 255, 0.92)">Lumbardh Plluzhina</a><span>on</span><a href="https://unsplash.com/?utm_source=piche&utm_medium=referral" target="_blank" rel="noopener" style="color: rgba(255, 255, 255, 0.92)">Unsplash</a>
+          </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 21.44px; max-width: 560px">
+      <h2 style="margin: 0; font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">Real estate developer in Latvia – modern apartments, flats and homes</h2>
+      <p style="margin: 0; font: var(--type-body-weight) 15px/24px var(--font-text); color: var(--text-body); text-wrap: pretty"><a href="https://piche.eu" style="color: var(--electric-blue)">PICHE</a> is a leading real estate developer in Latvia with more than 20 years of experience, offering high-quality apartments, flats, and homes for modern living. The company specializes not only in residential development, but also in the design, construction, and management of business parks, industrial buildings, warehouses, logistics and production facilities, office spaces, apartment buildings, and row houses.</p>
+      <p style="margin: 0; font: var(--type-body-weight) 15px/24px var(--font-text); color: var(--text-body); text-wrap: pretty">PICHE’s portfolio includes more than 200 designed and developed buildings with a total area exceeding 6 million m². The company’s team consists of more than 300 professionals – architects, designers, engineers, IT specialists, project managers, and construction experts – ensuring full-cycle real estate development in Latvia.</p>
+      <div style="display: flex; gap: 64px; padding-top: 8px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">200+</span>
+          <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">Buildings developed</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">6 M m²</span>
+          <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">Total area</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">300+</span>
+          <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">Professionals</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="news" style="background: var(--surface-alt); padding: 64px 0">
+    <div style="max-width: 1383px; margin: 0 auto; padding: 0 32px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 32px; margin-bottom: 32px">
+        <h2 style="margin: 0; font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">News</h2>
+        <a href="#news" style="font: var(--type-sublink-weight) var(--type-sublink-size)/var(--type-sublink-lh) var(--font-text); color: var(--text-tertiary)">All news</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px">
+        <sc-for list="{{ news }}" as="n" hint-placeholder-count="3">
+          <a href="#news" style="display: block; background: var(--white); border-radius: var(--radius-card); overflow: hidden">
+            <div style="position: relative; aspect-ratio: 16 / 9"><image-slot id="{{ n.slotId }}" shape="rect" src="{{ n.src }}" credit="{{ n.credit }}" credit-href="{{ n.creditHref }}" placeholder="{{ n.label }}"></image-slot><div style="position: absolute; right: 8px; bottom: 8px; z-index: 2; padding: 3px 6px; border-radius: 4px; background: rgba(0, 0, 0, 0.45); font: 400 10px/14px var(--font-text); color: rgba(255, 255, 255, 0.92)">{{ n.credit }}</div></div>
+            <div style="padding: 21.44px; display: flex; flex-direction: column; gap: 8px">
+              <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">{{ n.date }}</span>
+              <span style="font: var(--type-product-weight) var(--type-product-size)/24px var(--font-text); color: var(--text-heading); text-wrap: pretty">{{ n.title }}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+      <div style="margin-top: 64px; display: flex; flex-direction: column; gap: 21.44px">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 32px">
+          <h3 style="margin: 0; font: var(--type-category-weight) var(--type-category-size)/var(--type-category-lh) var(--font-text); color: var(--text-heading)">From our social channels</h3>
+          <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">Living projects only</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px">
+          <sc-for list="{{ social }}" as="s" hint-placeholder-count="4">
+            <a href="#news" style="position: relative; display: block; border-radius: var(--radius-card); overflow: hidden; aspect-ratio: 1 / 1">
+              <image-slot id="{{ s.slotId }}" shape="rect" src="{{ s.src }}" credit="{{ s.credit }}" credit-href="{{ s.creditHref }}" placeholder="{{ s.label }}"></image-slot>
+              <div style="position: absolute; right: 8px; bottom: 8px; z-index: 2; padding: 3px 6px; border-radius: 4px; background: rgba(0, 0, 0, 0.45); font: 400 10px/14px var(--font-text); color: rgba(255, 255, 255, 0.92)">{{ s.credit }}</div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width: 1383px; margin: 0 auto; padding: 64px 32px; display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font: 500 28px/34px var(--font-display), sans-serif; color: var(--text-heading)">Choose a bank</h2>
+      <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">Click to view offer</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px">
+      <sc-for list="{{ banks }}" as="b" hint-placeholder-count="6">
+        <a href="{{ b.href }}" target="_blank" style="display: flex; align-items: center; justify-content: center; height: 88px; border: 1px solid var(--border-divider); border-radius: var(--radius-control); font: var(--type-category-weight) var(--type-category-size)/var(--type-category-lh) var(--font-text); color: var(--text-heading); background: var(--white)" style-hover="border-color: var(--electric-blue); color: var(--electric-blue)">{{ b.name }}</a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="contacts" style="background: var(--carbon-dark); padding: 64px 0">
+    <div style="max-width: 1383px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 64px">
+      <div style="display: flex; flex-direction: column; gap: 32px">
+        <h2 style="margin: 0; font: var(--type-hero-weight) var(--type-hero-size)/var(--type-hero-lh) var(--font-display), sans-serif; color: var(--text-on-dark)">Contacts</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font: 500 17px/24px var(--font-text); color: var(--text-on-dark); letter-spacing: 0.24em">V ā r d s  U z v ā r d s</span>
+          <a href="tel:+37122333333" style="font: var(--type-body-weight) 15px/24px var(--font-text); color: var(--pale-silver); letter-spacing: 0.16em">+ 3 7 1 2 2 3 3 3 3 3 3 3 3</a>
+          <a href="mailto:info@piche.eu" style="font: var(--type-body-weight) 15px/24px var(--font-text); color: var(--pale-silver)">e - m a i l</a>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 21.44px; border-top: 1px solid var(--graphite)">
+          <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog)">Mežciema iela, Mārupe, Latvia</span>
+          <a href="https://piche.eu" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--pale-silver)">piche.eu</a>
+        </div>
+      </div>
+      <form onSubmit="{{ submit }}" style="display: flex; flex-direction: column; gap: 16px; background: var(--white); border-radius: var(--radius-card); padding: 32px">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+          <input placeholder="Name" style="height: 44px; padding: 0 12px; border: 1px solid var(--border-ui); border-radius: var(--radius-control); font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-body); outline: none">
+          <input placeholder="Surname" style="height: 44px; padding: 0 12px; border: 1px solid var(--border-ui); border-radius: var(--radius-control); font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-body); outline: none">
+          <input placeholder="Telephone number" style="height: 44px; padding: 0 12px; border: 1px solid var(--border-ui); border-radius: var(--radius-control); font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-body); outline: none">
+          <input placeholder="E-mail" style="height: 44px; padding: 0 12px; border: 1px solid var(--border-ui); border-radius: var(--radius-control); font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-body); outline: none">
+        </div>
+        <textarea placeholder="Your question or comment" rows="5" style="padding: 12px; border: 1px solid var(--border-ui); border-radius: var(--radius-control); font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-body); outline: none; resize: vertical"></textarea>
+        <label style="display: flex; align-items: flex-start; gap: 8px; font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--text-tertiary)">
+          <input type="checkbox" style="margin-top: 3px">I agree to the processing of my personal data
+        </label>
+        <x-import component-from-global-scope="ShowroomMinimalDesignSystem_8169c9.Button" width="100%" hint-size="100%,40px">Send message</x-import>
+      </form>
+    </div>
+  </section>
+
+  <footer style="background: var(--carbon-dark); border-top: 1px solid var(--graphite); padding: 64px 0 32px">
+    <div style="max-width: 1383px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 64px">
+      <div style="display: flex; flex-direction: column; gap: 21.44px; align-items: flex-start">
+        <svg viewBox="0 0 800 793" role="img" aria-label="PICHE" style="height: 72px; width: auto; display: block; color: #13b5ca"><path fill="currentColor" fill-rule="evenodd" d="M671.0 0.0L672.0 2.0L656.0 24.0L655.0 28.0L641.0 47.0L640.0 51.0L624.0 73.0L623.0 77.0L609.0 96.0L608.0 100.0L592.0 122.0L591.0 126.0L577.0 145.0L576.0 149.0L560.0 171.0L559.0 175.0L545.0 194.0L544.0 198.0L528.0 220.0L527.0 224.0L513.0 243.0L512.0 247.0L496.0 269.0L495.0 273.0L481.0 292.0L480.0 296.0L464.0 318.0L463.0 322.0L449.0 341.0L448.0 345.0L432.0 367.0L431.0 371.0L417.0 390.0L416.0 394.0L400.0 416.0L399.0 420.0L397.0 421.0L397.0 423.0L385.0 439.0L384.0 443.0L382.0 444.0L339.0 510.0L286.0 394.0L388.0 291.0L388.0 289.0L433.0 245.0L433.0 243.0L479.0 198.0L479.0 196.0L525.0 151.0L525.0 149.0L571.0 104.0L571.0 102.0L617.0 57.0L617.0 55.0L662.0 11.0L662.0 9.0L671.0 0.0ZM618.0 31.0L620.0 32.0L450.0 204.0L450.0 206.0L403.0 252.0L403.0 254.0L398.0 259.0L166.0 302.0L167.0 300.0L188.0 289.0L189.0 287.0L193.0 286.0L194.0 284.0L198.0 283.0L199.0 281.0L203.0 280.0L204.0 278.0L208.0 277.0L209.0 275.0L213.0 274.0L214.0 272.0L218.0 271.0L219.0 269.0L223.0 268.0L239.0 257.0L245.0 255.0L246.0 253.0L250.0 252.0L251.0 250.0L255.0 249.0L256.0 247.0L260.0 246.0L261.0 244.0L265.0 243.0L266.0 241.0L270.0 240.0L271.0 238.0L275.0 237.0L276.0 235.0L280.0 234.0L296.0 223.0L302.0 221.0L303.0 219.0L307.0 218.0L308.0 216.0L312.0 215.0L313.0 213.0L317.0 212.0L318.0 210.0L322.0 209.0L323.0 207.0L327.0 206.0L328.0 204.0L332.0 203.0L333.0 201.0L337.0 200.0L353.0 189.0L359.0 187.0L360.0 185.0L364.0 184.0L365.0 182.0L369.0 181.0L370.0 179.0L374.0 178.0L375.0 176.0L379.0 175.0L380.0 173.0L384.0 172.0L385.0 170.0L389.0 169.0L390.0 167.0L394.0 166.0L410.0 155.0L416.0 153.0L417.0 151.0L421.0 150.0L422.0 148.0L426.0 147.0L427.0 145.0L431.0 144.0L432.0 142.0L436.0 141.0L437.0 139.0L441.0 138.0L442.0 136.0L446.0 135.0L447.0 133.0L451.0 132.0L467.0 121.0L473.0 119.0L474.0 117.0L478.0 116.0L479.0 114.0L483.0 113.0L484.0 111.0L488.0 110.0L489.0 108.0L493.0 107.0L494.0 105.0L498.0 104.0L499.0 102.0L503.0 101.0L504.0 99.0L508.0 98.0L524.0 87.0L530.0 85.0L531.0 83.0L535.0 82.0L536.0 80.0L540.0 79.0L541.0 77.0L545.0 76.0L546.0 74.0L550.0 73.0L551.0 71.0L555.0 70.0L556.0 68.0L560.0 67.0L561.0 65.0L565.0 64.0L581.0 53.0L587.0 51.0L588.0 49.0L592.0 48.0L593.0 46.0L597.0 45.0L598.0 43.0L602.0 42.0L618.0 31.0ZM665.0 38.0L666.0 42.0L660.0 77.0L650.0 128.0L590.0 481.0L586.0 496.0L520.0 363.0L520.0 360.0L495.0 312.0L492.0 303.0L494.0 302.0L499.0 292.0L513.0 273.0L514.0 269.0L545.0 224.0L546.0 220.0L562.0 198.0L563.0 194.0L577.0 175.0L578.0 171.0L594.0 149.0L595.0 145.0L609.0 126.0L610.0 122.0L626.0 100.0L627.0 96.0L641.0 77.0L642.0 73.0L658.0 51.0L665.0 38.0ZM374.0 278.0L378.0 279.0L271.0 388.0L128.0 326.0L128.0 324.0L133.0 323.0L150.0 321.0L374.0 278.0ZM482.0 319.0L582.0 523.0L401.0 444.0L482.0 319.0ZM0.0 631.0L156.0 631.0L175.0 635.0L184.0 640.0L190.0 646.0L195.0 655.0L197.0 663.0L197.0 702.0L194.0 713.0L188.0 720.0L188.0 722.0L182.0 727.0L161.0 734.0L30.0 734.0L30.0 793.0L0.0 793.0L0.0 631.0ZM216.0 631.0L246.0 631.0L246.0 793.0L215.0 792.0L216.0 631.0ZM306.0 631.0L431.0 631.0L431.0 658.0L305.0 658.0L300.0 660.0L295.0 667.0L295.0 757.0L300.0 764.0L305.0 766.0L431.0 766.0L431.0 793.0L307.0 793.0L287.0 789.0L273.0 780.0L267.0 770.0L264.0 757.0L265.0 660.0L270.0 648.0L276.0 641.0L289.0 634.0L306.0 631.0ZM450.0 631.0L481.0 632.0L481.0 694.0L597.0 694.0L597.0 632.0L628.0 631.0L628.0 793.0L597.0 792.0L597.0 721.0L481.0 721.0L481.0 792.0L450.0 793.0L450.0 631.0ZM647.0 631.0L800.0 631.0L800.0 658.0L677.0 658.0L677.0 694.0L794.0 694.0L793.0 721.0L677.0 721.0L677.0 766.0L800.0 766.0L800.0 793.0L646.0 792.0L647.0 631.0ZM31.0 658.0L30.0 708.0L153.0 708.0L161.0 706.0L166.0 700.0L166.0 666.0L163.0 661.0L157.0 658.0L31.0 658.0Z"></path></svg>
+        <p style="margin: 0; max-width: 30ch; font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); text-wrap: pretty">Energy-efficient homes in Rīga and Mārupe, built and sold by PICHE.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <a href="tel:+37122333333" style="font: 500 15px/24px var(--font-text); color: var(--text-on-dark)">+371 22 333 333</a>
+          <a href="mailto:info@piche.eu" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)">info@piche.eu</a>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <h3 style="font: var(--type-category-weight) var(--type-category-size)/var(--type-category-lh) var(--font-text); letter-spacing: 0.08em; text-transform: uppercase; color: var(--pewter); margin: 0">Projects</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <a href="#projects" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Priežu Rezidences row houses</a>
+          <a href="#projects" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Priežu Rezidences apartments</a>
+          <a href="#projects" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Mežaparka rezidences</a>
+          <a href="#projects" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Krūmiņsala 29</a>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <h3 style="font: var(--type-category-weight) var(--type-category-size)/var(--type-category-lh) var(--font-text); letter-spacing: 0.08em; text-transform: uppercase; color: var(--pewter); margin: 0">Company</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <a href="#about" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">About us</a>
+          <a href="#news" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">News</a>
+          <a href="#contacts" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Contacts</a>
+          <a href="#explore" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Explore in 3D</a>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <h3 style="font: var(--type-category-weight) var(--type-category-size)/var(--type-category-lh) var(--font-text); letter-spacing: 0.08em; text-transform: uppercase; color: var(--pewter); margin: 0">Buying</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <a href="#banks" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Choose a bank</a>
+          <a href="#contacts" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Apply now</a>
+          <a href="#contacts" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Privacy policy</a>
+          <a href="#contacts" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Cookie settings</a>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 1383px; margin: 42.88px auto 0; padding: 21.44px 32px 0; border-top: 1px solid var(--graphite); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap">
+      <span style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--pewter)">© 2026 PICHE · Mežciema iela, Mārupe, Latvia</span>
+      <div style="display: flex; gap: 21.44px; flex-wrap: wrap">
+        <a href="https://piche.eu" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">piche.eu</a>
+        <a href="#news" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Instagram</a>
+        <a href="#news" style="font: var(--type-body-weight) var(--type-body-size)/var(--type-body-lh) var(--font-text); color: var(--silver-fog); transition: var(--transition-control)" style-hover="color: var(--white)">Facebook</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;projectCount&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[2,4],&quot;default&quot;:4,&quot;tsType&quot;:&quot;2 | 4&quot;,&quot;section&quot;:&quot;Projects&quot;}}">
+const ALL_PROJECTS = [
+  { name: 'Priežu Rezidences row houses', location: 'MĀRUPE', status: 'Selling', label: 'Drop an apartment building visualisation' },
+  { name: 'Priežu Rezidences apartments', location: 'MĀRUPE', status: 'Selling', label: 'Drop an apartment visualisation' },
+  { name: 'Mežaparka rezidences', location: 'RĪGA', status: 'In development', label: 'Drop an apartment visualisation' },
+  { name: 'Krūmiņsala 29', location: 'RĪGA', status: 'In development', label: 'Drop an apartment visualisation' }
+];
+
+const PHOTOS = {
+  facadeDark: { photographer: 'Haberdoedas', src: 'https://images.unsplash.com/photo-1755103114153-eb0a66e3725a?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Haberdoedas on Unsplash', creditHref: 'https://unsplash.com/@haberdoedas' },
+  balconies: { photographer: 'Naksha Banwao', src: 'https://images.unsplash.com/photo-1721815693498-cc28507c0ba2?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Naksha Banwao on Unsplash', creditHref: 'https://unsplash.com/@nakshabanwao' },
+  facadeA: { photographer: 'Sebastian Schuster', src: 'https://images.unsplash.com/photo-1757970326337-95d7cca56fa1?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Sebastian Schuster on Unsplash', creditHref: 'https://unsplash.com/@sschusterphotoart' },
+  facadeB: { photographer: 'Sebastian Schuster', src: 'https://images.unsplash.com/photo-1757372429876-ebeda13edfab?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Sebastian Schuster on Unsplash', creditHref: 'https://unsplash.com/@sschusterphotoart' },
+  facadeC: { photographer: 'Sebastian Schuster', src: 'https://images.unsplash.com/photo-1757372429884-92e02350c5d9?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Sebastian Schuster on Unsplash', creditHref: 'https://unsplash.com/@sschusterphotoart' },
+  livingWide: { photographer: 'Lumbardh Plluzhina', src: 'https://images.unsplash.com/photo-1682184805271-11671b7ecf4c?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Lumbardh Plluzhina on Unsplash', creditHref: 'https://unsplash.com/@bardhplluzhina' },
+  livingTv: { photographer: 'Huy Nguyen', src: 'https://images.unsplash.com/photo-1628592102751-ba83b0314276?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Huy Nguyen on Unsplash', creditHref: 'https://unsplash.com/@huynguyen_pch' },
+  kitchen: { photographer: 'Christian', src: 'https://images.unsplash.com/photo-1680416124510-5eae1beca412?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Christian on Unsplash', creditHref: 'https://unsplash.com/@axcreativeagency' },
+  couch: { photographer: 'Lotus Design N Print', src: 'https://images.unsplash.com/photo-1666282167632-c613fbeb163c?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Lotus Design N Print on Unsplash', creditHref: 'https://unsplash.com/@lotusdnp' },
+  bedroom: { photographer: 'mahmoud azmy', src: 'https://images.unsplash.com/photo-1662454419716-c4c504728811?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by mahmoud azmy on Unsplash', creditHref: 'https://unsplash.com/@mahmoud_azmy' },
+  lounge: { photographer: 'Prydumano Design', src: 'https://images.unsplash.com/photo-1738168279272-c08d6dd22002?fm=jpg&q=70&w=1400&auto=format&fit=crop', credit: 'Photo by Prydumano Design on Unsplash', creditHref: 'https://unsplash.com/@prydumanodesign' }
+};
+const PROJECT_PHOTOS = ['balconies', 'facadeA', 'facadeB', 'facadeC'];
+const NEWS_PHOTOS = ['livingTv', 'kitchen', 'couch'];
+const SOCIAL_PHOTOS = ['bedroom', 'lounge', 'livingWide', 'livingTv'];
+
+class Component extends DCLogic {
+  state = { lang: 'EN', langOpen: false };
+
+  componentDidMount() {
+    this._close = (e) => { if (this.state.langOpen && !e.target.closest('[data-lang-menu]')) this.setState({ langOpen: false }); };
+    document.addEventListener('click', this._close, true);
+  }
+
+  componentWillUnmount() { document.removeEventListener('click', this._close, true); }
+
+  langItemStyle(code) {
+    const active = this.state.lang === code;
+    return {
+      font: 'var(--type-nav-weight) var(--type-nav-size)/var(--type-nav-lh) var(--font-text)',
+      display: 'flex', alignItems: 'center', height: '36px', padding: '0 14px',
+      border: 0, background: active ? 'var(--action-nav-hover-bg)' : 'transparent',
+      color: active ? 'var(--carbon-dark)' : 'var(--text-tertiary)',
+      cursor: 'pointer', textAlign: 'left', width: '100%',
+      transition: 'var(--transition-control)'
+    };
+  }
+
+  renderVals() {
+    const count = this.props.projectCount ?? 4;
+    return {
+      projects: ALL_PROJECTS.slice(0, count).map((p, i) => ({ ...p, slotId: 'piche-project-' + i, ...PHOTOS[PROJECT_PHOTOS[i]] })),
+
+      headerCtaStyle: { whiteSpace: 'nowrap', minHeight: '40px' },
+      lang: this.state.lang,
+      toggleLang: () => this.setState(s => ({ langOpen: !s.langOpen })),
+      langMenuStyle: {
+        position: 'absolute', top: '42px', right: 0, minWidth: '140px', zIndex: 60,
+        background: 'var(--white)', border: '1px solid var(--border-divider)',
+        borderRadius: 'var(--radius-control)', overflow: 'hidden',
+        display: this.state.langOpen ? 'flex' : 'none', flexDirection: 'column'
+      },
+      languages: [
+        { code: 'LV', label: 'Latviešu' }, { code: 'EN', label: 'English' }, { code: 'RU', label: 'Русский' }
+      ].map(l => ({
+        label: l.label,
+        select: () => this.setState({ lang: l.code, langOpen: false }),
+        style: this.langItemStyle(l.code)
+      })),
+      news: [
+        { date: '12 August 2026', title: 'Priežu Rezidences apartments: construction reaches the final stage', label: 'Drop a news image', slotId: 'piche-news-0' },
+        { date: '4 July 2026', title: 'Row houses in a pine forest — first residents move in', label: 'Drop a news image', slotId: 'piche-news-1' },
+        { date: '19 June 2026', title: 'Smart access and underfloor heating as a standard', label: 'Drop a news image', slotId: 'piche-news-2' }
+      ].map((n, i) => ({ ...n, ...PHOTOS[NEWS_PHOTOS[i]] })),
+      social: [
+        { label: 'Instagram post', slotId: 'piche-social-0' }, { label: 'Instagram post', slotId: 'piche-social-1' },
+        { label: 'Facebook post', slotId: 'piche-social-2' }, { label: 'Instagram post', slotId: 'piche-social-3' }
+      ].map((x, i) => ({ ...x, ...PHOTOS[SOCIAL_PHOTOS[i]] })),
+      banks: [
+        { name: 'Swedbank', href: 'https://www.swedbank.lv/private/credit/loans/home' },
+        { name: 'Bigbank', href: 'https://www.bigbank.lv/privatpersonam/hipotekarais-aizdevums/' },
+        { name: 'ALTUM', href: 'https://www.altum.lv/en/services/individuals/' },
+        { name: 'Citadele', href: 'https://www.citadele.lv/lv/private/mortgage/' },
+        { name: 'SEB', href: 'https://www.seb.lv/privatpersonam/krediti/majokla-kredits' },
+        { name: 'Luminor', href: 'https://www.luminor.lv/en' }
+      ],
+      submit: (e) => e.preventDefault()
+    };
+  }
+}
+</script>
+</body>
+</html>

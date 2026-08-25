@@ -1,0 +1,12 @@
+:root{
+--type-hero-size:40px;--type-hero-weight:500;--type-hero-lh:48px;
+--type-promo-size:22px;--type-promo-weight:400;--type-promo-lh:20px;
+--type-product-size:17px;--type-product-weight:500;--type-product-lh:20px;
+--type-category-size:16px;--type-category-weight:500;--type-category-lh:20px;
+--type-nav-size:14px;--type-nav-weight:500;--type-nav-lh:16.8px;
+--type-button-size:14px;--type-button-weight:500;--type-button-lh:16.8px;
+--type-body-size:14px;--type-body-weight:400;--type-body-lh:20px;
+--type-sublink-size:14px;--type-sublink-weight:400;--type-sublink-lh:20px;
+--letter-spacing:normal;
+--weight-regular:400;--weight-medium:500;
+}

@@ -1,0 +1,5 @@
+/* Universal Sans (Display + Text) is the source system's family. It is a commercial
+   typeface and no binaries were provided, so the nearest Google Fonts matches are used:
+   Archivo for Display, Figtree for Text. Substitution flagged in readme.md. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Figtree:wght@400;500;600&display=swap");
+:root{--font-display:"Archivo","Universal Sans Display",-apple-system,Arial,sans-serif;--font-text:"Figtree","Universal Sans Text",-apple-system,Arial,sans-serif}

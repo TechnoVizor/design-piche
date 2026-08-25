@@ -1,0 +1,10 @@
+:root{
+--space-base:8px;
+--space-1:8px;--space-2:16px;--space-3:21.44px;--space-4:32px;--space-5:40px;--space-6:64px;
+--space-half:4px;
+--pad-button:4px;--pad-nav:4px 16px;
+--gap-card:16px;
+--container-max:1383px;
+--hero-height:100vh;
+--cta-width:200px;--cta-width-secondary:160px;--cta-height:40px;--nav-item-height:32px;
+}

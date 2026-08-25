@@ -1,0 +1,8 @@
+:root{
+--duration-base:0.33s; /* @kind other */
+--duration-shadow:0.25s; /* @kind other */
+--ease-link:cubic-bezier(0.5,0,0,0.75); /* @kind other */
+--transition-control:border-color 0.33s,background-color 0.33s,color 0.33s,box-shadow 0.25s; /* @kind other */
+--transition-nav:color 0.33s,background-color 0.33s; /* @kind other */
+--transition-link:box-shadow 0.33s cubic-bezier(0.5,0,0,0.75),color 0.33s; /* @kind other */
+}

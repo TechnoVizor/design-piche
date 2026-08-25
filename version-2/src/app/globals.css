@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+:root {
+  /* next/font variables (set on <html>) mapped to the design system names */
+  --font-display: var(--font-archivo);
+  --font-text: var(--font-figtree);
+
+  /* Showroom Minimal design system — base palette (tokens/colors.css).
+     Monochrome plus one accent; PICHE overrides the accent below. */
+  --electric-blue: #3e6ae1;
+  --white: #ffffff;
+  --light-ash: #f4f4f4;
+  --carbon-dark: #171a20;
+  --graphite: #393c41;
+  --pewter: #5c5e62;
+  --silver-fog: #8e8e8e;
+  --cloud-gray: #eeeeee;
+  --pale-silver: #d0d1d2;
+  --frosted-white: rgba(255, 255, 255, 0.75);
+  --overlay-gray: rgba(128, 128, 128, 0.65);
+  --shadow-hint: rgba(0, 0, 0, 0.05);
+
+  /* semantic aliases */
+  --surface-page: var(--white);
+  --surface-alt: var(--light-ash);
+  --surface-dark: var(--carbon-dark);
+  --surface-card: var(--white);
+  --surface-frost: var(--frosted-white);
+  --surface-overlay: var(--overlay-gray);
+
+  --text-heading: var(--carbon-dark);
+  --text-body: var(--graphite);
+  --text-tertiary: var(--pewter);
+  --text-placeholder: var(--silver-fog);
+  --text-on-dark: var(--white);
+  --text-on-accent: var(--white);
+
+  --action-primary: var(--electric-blue);
+  --action-primary-hover: #2e56c4;
+  --action-secondary-bg: var(--white);
+  --action-secondary-text: var(--graphite);
+  --action-nav-text: var(--carbon-dark);
+  --action-nav-hover-bg: rgba(23, 26, 32, 0.05);
+
+  --border-divider: var(--cloud-gray);
+  --border-ui: var(--pale-silver);
+  --accent-promo: var(--electric-blue);
+
+  /* typography ladder (tokens/typography.css) */
+  --type-hero-size: 40px;
+  --type-hero-weight: 500;
+  --type-hero-lh: 48px;
+  --type-promo-size: 22px;
+  --type-promo-weight: 400;
+  --type-promo-lh: 20px;
+  --type-product-size: 17px;
+  --type-product-weight: 500;
+  --type-product-lh: 20px;
+  --type-category-size: 16px;
+  --type-category-weight: 500;
+  --type-category-lh: 20px;
+  --type-nav-size: 14px;
+  --type-nav-weight: 500;
+  --type-nav-lh: 16.8px;
+  --type-button-size: 14px;
+  --type-button-weight: 500;
+  --type-button-lh: 16.8px;
+  --type-body-size: 14px;
+  --type-body-weight: 400;
+  --type-body-lh: 20px;
+  --type-sublink-size: 14px;
+  --type-sublink-weight: 400;
+  --type-sublink-lh: 20px;
+  --letter-spacing: normal;
+
+  /* spacing (tokens/spacing.css — 21.44px is genuine to the source, do not round) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 21.44px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 64px;
+  --space-half: 4px;
+  --pad-button: 4px;
+  --gap-card: 16px;
+  --container-max: 1383px;
+  --cta-width: 200px;
+  --cta-height: 40px;
+
+  /* radii */
+  --radius-none: 0px;
+  --radius-control: 4px;
+  --radius-card: 12px;
+  --radius-round: 50%;
+
+  /* motion */
+  --duration-base: 0.33s;
+  --duration-shadow: 0.25s;
+  --ease-link: cubic-bezier(0.5, 0, 0, 0.75);
+  --transition-control: border-color 0.33s, background-color 0.33s, color 0.33s,
+    box-shadow 0.25s;
+  --transition-nav: color 0.33s, background-color 0.33s;
+  --transition-link: box-shadow 0.33s cubic-bezier(0.5, 0, 0, 0.75), color 0.33s;
+
+  /* elevation — deliberately near-absent */
+  --elevation-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --blur-frost: blur(12px);
+
+  /* PICHE brand — the accent is teal, not the system default blue */
+  --electric-blue: #13b5ca;
+  --action-primary: #13b5ca;
+  --action-primary-hover: #0f97a9;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-body);
+  font-family: var(--font-text), system-ui, sans-serif;
+}
+
+a {
+  color: var(--text-heading);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--electric-blue);
+}
+
+input,
+textarea {
+  font-family: var(--font-text), system-ui, sans-serif;
+}
+
+/* Type ladder helpers — `font` shorthands from the design file. */
+.type-hero {
+  font: var(--type-hero-weight) var(--type-hero-size) / var(--type-hero-lh)
+    var(--font-display), sans-serif;
+}
+.type-section {
+  font: 500 28px/34px var(--font-display), sans-serif;
+}
+.type-promo {
+  font: var(--type-promo-weight) var(--type-promo-size) / 30px var(--font-text);
+}
+.type-product {
+  font: var(--type-product-weight) var(--type-product-size) /
+    var(--type-product-lh) var(--font-text);
+}
+.type-category {
+  font: var(--type-category-weight) var(--type-category-size) /
+    var(--type-category-lh) var(--font-text);
+}
+.type-nav {
+  font: var(--type-nav-weight) var(--type-nav-size) / var(--type-nav-lh)
+    var(--font-text);
+}
+.type-button {
+  font: var(--type-button-weight) var(--type-button-size) /
+    var(--type-button-lh) var(--font-text);
+}
+.type-body {
+  font: var(--type-body-weight) var(--type-body-size) / var(--type-body-lh)
+    var(--font-text);
+}
+.type-sublink {
+  font: var(--type-sublink-weight) var(--type-sublink-size) /
+    var(--type-sublink-lh) var(--font-text);
+}
+.type-credit {
+  font: 400 10px/14px var(--font-text);
+}
