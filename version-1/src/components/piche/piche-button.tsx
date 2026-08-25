@@ -28,7 +28,7 @@ export function PicheButton({
   return (
     <Button
       className={cn(
-        "gap-(--space-sm) whitespace-nowrap rounded-(--radius-md-ds) font-(family-name:--font-core) font-bold leading-none disabled:bg-(--surface-card) disabled:text-(--text-disabled)",
+        "gap-(--space-sm) whitespace-nowrap rounded-(--radius-md-ds) font-(family-name:--font-core) font-bold leading-none duration-(--duration-fast) ease-(--ease-standard) hover:scale-[1.02] active:scale-[0.97] disabled:scale-100 disabled:bg-(--surface-card) disabled:text-(--text-disabled)",
         VARIANT_CLASS[variant],
         SIZE_CLASS[size],
         fullWidth ? "w-full" : "w-auto",

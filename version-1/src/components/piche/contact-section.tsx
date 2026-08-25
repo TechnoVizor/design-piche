@@ -11,7 +11,7 @@ export function ContactSection() {
   const [sent, setSent] = useState(false);
 
   return (
-    <section id="contacts" className="pt-(--space-section)">
+    <section id="contacts" className="scroll-mt-(--nav-height) pt-(--space-section)">
       <div className="grid grid-cols-1 gap-(--space-section) lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
         <div className="flex flex-col gap-(--space-xl)">
           <h2
@@ -99,9 +99,11 @@ export function ContactSection() {
               Send message
             </PicheButton>
             {sent ? (
-              <InlineMessage tone="success">
-                Thank you. Our sales team will contact you shortly.
-              </InlineMessage>
+              <div className="motion-safe:animate-[reveal-up_420ms_var(--ease-standard)_both]">
+                <InlineMessage tone="success">
+                  Thank you. Our sales team will contact you shortly.
+                </InlineMessage>
+              </div>
             ) : null}
           </div>
         </form>

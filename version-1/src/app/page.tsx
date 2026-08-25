@@ -8,14 +8,16 @@ import { SocialSection } from "@/components/piche/social-section";
 import { BanksSection } from "@/components/piche/banks-section";
 import { ContactSection } from "@/components/piche/contact-section";
 import { SiteFooter } from "@/components/piche/site-footer";
+import { MotionInit } from "@/components/piche/motion-init";
 
 export default function Home() {
   return (
     <>
+      <MotionInit />
       <SiteHeader />
       <main
         id="top"
-        className="mx-auto max-w-(--container-max) bg-(--surface-soft) px-(--container-pad) pb-(--space-section)"
+        className="mx-auto max-w-(--container-max) scroll-mt-(--nav-height) bg-(--surface-soft) px-(--container-pad) pb-(--space-section)"
       >
         <HeroSection />
         <ProjectsSection />

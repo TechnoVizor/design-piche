@@ -22,7 +22,7 @@ export function BanksSection() {
               href={bank.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-22 items-center justify-center rounded-(--radius-md-ds) bg-(--surface-canvas) text-(length:--body-strong-size) font-semibold text-(--text-primary) hover:text-(--brand-primary)"
+              className="flex h-22 items-center justify-center rounded-(--radius-md-ds) bg-(--surface-canvas) text-(length:--body-strong-size) font-semibold text-(--text-primary) transition-[color,box-shadow,transform] duration-(--duration-base) ease-(--ease-standard) hover:-translate-y-0.5 hover:text-(--brand-primary) hover:shadow-[0_8px_20px_-12px_rgba(0,0,0,0.25)]"
             >
               {bank.name}
             </a>

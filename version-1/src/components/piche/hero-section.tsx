@@ -6,7 +6,7 @@ import { PhotoCredit } from "@/components/piche/photo-credit";
 export function HeroSection() {
   return (
     <>
-      <section className="flex flex-col items-center gap-(--space-xl) py-(--space-section) pb-(--space-xxl) text-center">
+      <section className="hero-in flex flex-col items-center gap-(--space-xl) py-(--space-section) pb-(--space-xxl) text-center">
         <h1
           className="m-0 max-w-245 font-(family-name:--font-display) text-(length:--display-xl-size) font-semibold text-(--text-primary)"
           style={{ lineHeight: 1.1, letterSpacing: "-1.2px" }}
@@ -28,17 +28,21 @@ export function HeroSection() {
         </div>
       </section>
 
-      <section className="relative aspect-21/9 overflow-hidden rounded-(--radius-lg-ds) bg-(--surface-dark)">
+      <section
+        data-reveal="scale"
+        className="group relative aspect-21/9 overflow-hidden rounded-(--radius-lg-ds) bg-(--surface-dark)"
+      >
         <Image
           src="https://images.unsplash.com/photo-1759845565036-cbecbcfcb8e2?auto=format&fit=crop&crop=entropy&q=70&w=1680&h=720"
           alt="All PICHE projects in one video"
           fill
           sizes="(min-width: 1280px) 1232px, 100vw"
-          className="object-cover"
+          className="object-cover transition-transform duration-700 ease-(--ease-standard) group-hover:scale-105"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-(--space-lg)">
-          <span className="flex h-22 w-22 items-center justify-center rounded-full bg-(--surface-canvas) text-2xl text-(--text-primary)">
-            ▶
+          <span className="relative flex h-22 w-22 items-center justify-center rounded-full bg-(--surface-canvas) text-2xl text-(--text-primary) shadow-lg transition-transform duration-(--duration-base) ease-(--ease-standard) group-hover:scale-110">
+            <span className="absolute inset-0 hidden rounded-full bg-(--surface-canvas)/60 group-hover:block group-hover:animate-ping" />
+            <span className="relative">▶</span>
           </span>
           <PinOverlayPill>
             Intro video · all of our projects in one video

@@ -513,7 +513,7 @@ export function Explore3DSection() {
   };
 
   return (
-    <section id="explore" className="pt-(--space-section)">
+    <section id="explore" className="scroll-mt-(--nav-height) pt-(--space-section)">
       <div className="mb-(--space-xl) flex flex-col gap-(--space-sm)">
         <h2
           className="m-0 font-(family-name:--font-display) text-(length:--display-lg-size) font-bold text-(--text-primary)"
@@ -528,7 +528,10 @@ export function Explore3DSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 items-stretch gap-(--space-lg) lg:grid-cols-[minmax(0,1fr)_400px]">
+      <div
+        data-reveal
+        className="grid grid-cols-1 items-stretch gap-(--space-lg) lg:grid-cols-[minmax(0,1fr)_400px]"
+      >
         <div className="relative min-h-155 overflow-hidden rounded-(--radius-lg-ds) bg-(--surface-card)">
           <div ref={hostRef} className="absolute inset-0 cursor-grab" />
 
@@ -609,7 +612,7 @@ export function Explore3DSection() {
                     key={u.id}
                     type="button"
                     onClick={() => setSelection({ building: u.building, floor: u.floor, unit: u.id })}
-                    className="-mx-(--space-sm) grid grid-cols-[1fr_auto] items-center gap-x-(--space-md) gap-y-(--space-sm) rounded-(--radius-sm-ds) border-0 border-b border-(--border-hairline) px-(--space-sm) py-(--space-md) text-left hover:bg-(--surface-canvas)"
+                    className="-mx-(--space-sm) grid grid-cols-[1fr_auto] items-center gap-x-(--space-md) gap-y-(--space-sm) rounded-(--radius-sm-ds) border-0 border-b border-(--border-hairline) px-(--space-sm) py-(--space-md) text-left transition-colors duration-(--duration-base) ease-(--ease-standard) hover:bg-(--surface-canvas)"
                     style={{ background: isSelected ? "var(--surface-canvas)" : "transparent" }}
                   >
                     <span className="whitespace-nowrap text-(length:--body-strong-size) font-semibold text-(--text-primary)">

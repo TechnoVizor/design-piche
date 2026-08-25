@@ -28,14 +28,14 @@ export function SocialSection() {
         {SOCIAL_IMAGES.map((s) => (
           <div
             key={s.id}
-            className="relative aspect-square overflow-hidden rounded-(--radius-md-ds) bg-(--surface-card)"
+            className="group relative aspect-square overflow-hidden rounded-(--radius-md-ds) bg-(--surface-card)"
           >
             <Image
               src={s.image}
               alt=""
               fill
               sizes="(min-width: 1024px) 25vw, 50vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 ease-(--ease-standard) group-hover:scale-110"
             />
             <PhotoCredit credit={s.credit} href={s.creditHref} />
           </div>

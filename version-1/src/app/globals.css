@@ -217,3 +217,74 @@
     @apply font-sans;
   }
 }
+
+/* Motion ------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
+ * [data-reveal] renders fully visible by default — the animation only ever
+ * enhances an already-shown element. MotionInit adds .reveal-in once the
+ * element enters the viewport; if JS never runs, nothing is lost.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal].reveal-in {
+    animation: reveal-up 640ms var(--ease-standard) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  [data-reveal="scale"].reveal-in {
+    animation-name: reveal-scale;
+  }
+
+  .hero-in > * {
+    animation: reveal-up 700ms var(--ease-standard) both;
+  }
+  .hero-in > *:nth-child(1) {
+    animation-delay: 40ms;
+  }
+  .hero-in > *:nth-child(2) {
+    animation-delay: 140ms;
+  }
+  .hero-in > *:nth-child(3) {
+    animation-delay: 240ms;
+  }
+}
+
+/* Global safety net: anything still animating for a reduced-motion user
+   collapses to an instant, fully-visible state. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

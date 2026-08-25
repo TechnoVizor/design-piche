@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { PhotoCredit } from "@/components/piche/photo-credit";
+import { StatCounter } from "@/components/piche/stat-counter";
 
 const STATS = [
   { value: "200+", label: "buildings designed and developed" },
@@ -9,7 +10,7 @@ const STATS = [
 
 export function AboutSection() {
   return (
-    <section id="about" className="pt-(--space-section)">
+    <section id="about" className="scroll-mt-(--nav-height) pt-(--space-section)">
       <div className="grid grid-cols-1 items-center gap-(--space-section) rounded-(--radius-lg-ds) bg-(--surface-card) p-(--space-xxl) lg:grid-cols-2">
         <div className="flex flex-col gap-(--space-lg)">
           <h2
@@ -29,15 +30,13 @@ export function AboutSection() {
             logistics and production facilities, offices, apartment buildings
             and row houses.
           </p>
-          <div className="flex gap-(--space-section)">
+          <div className="flex gap-(--space-xl)">
             {STATS.map((s) => (
               <div key={s.label} className="flex flex-col gap-(--space-xxs)">
-                <span
-                  className="font-(family-name:--font-display) text-(length:--display-lg-size) font-bold text-(--text-primary)"
-                  style={{ letterSpacing: "-0.8px" }}
-                >
-                  {s.value}
-                </span>
+                <StatCounter
+                  value={s.value}
+                  className="whitespace-nowrap tracking-[-0.4px] font-(family-name:--font-display) text-(length:--heading-xl-size) font-bold text-(--text-primary)"
+                />
                 <span className="text-(length:--body-sm-size) text-(--text-mute)">
                   {s.label}
                 </span>
@@ -51,7 +50,10 @@ export function AboutSection() {
             More about PICHE at piche.eu →
           </a>
         </div>
-        <div className="relative aspect-4/3 overflow-hidden rounded-(--radius-md-ds) bg-(--surface-secondary)">
+        <div
+          data-reveal="scale"
+          className="relative aspect-4/3 overflow-hidden rounded-(--radius-md-ds) bg-(--surface-secondary)"
+        >
           <Image
             src="https://images.unsplash.com/photo-1757970326337-95d7cca56fa1?auto=format&fit=crop&crop=entropy&q=70&w=1200&h=900"
             alt="PICHE site"

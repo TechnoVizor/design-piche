@@ -1,8 +1,12 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Wordmark } from "@/components/piche/wordmark";
 import { SearchBar } from "@/components/piche/search-bar";
 import { LangSwitch } from "@/components/piche/lang-switch";
 import { PicheButton } from "@/components/piche/piche-button";
+import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "#projects", label: "Projects" },
@@ -12,8 +16,32 @@ const NAV_LINKS = [
 ];
 
 export function SiteHeader() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 8);
+        ticking = false;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-30 border-b border-(--border-hairline) bg-(--surface-canvas)">
+    <header
+      className={cn(
+        "sticky top-0 z-30 border-b bg-(--surface-canvas) transition-[box-shadow,border-color] duration-(--duration-base) ease-(--ease-standard)",
+        scrolled
+          ? "border-transparent shadow-[0_1px_0_var(--border-hairline),0_8px_24px_-16px_rgba(0,0,0,0.25)]"
+          : "border-(--border-hairline) shadow-none",
+      )}
+    >
       <div className="mx-auto flex h-(--nav-height) max-w-(--container-max) items-center gap-(--space-lg) px-(--container-pad)">
         <Link href="#top" className="flex shrink-0 items-center">
           <Wordmark text="PICHE" size={26} />
@@ -23,9 +51,10 @@ export function SiteHeader() {
             <a
               key={l.href}
               href={l.href}
-              className="text-(length:--body-strong-size) font-semibold text-(--text-primary) hover:text-(--brand-primary)"
+              className="group relative text-(length:--body-strong-size) font-semibold text-(--text-primary) transition-colors duration-(--duration-base) hover:text-(--brand-primary)"
             >
               {l.label}
+              <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-(--brand-primary) transition-transform duration-(--duration-base) ease-(--ease-standard) group-hover:scale-x-100" />
             </a>
           ))}
         </nav>
