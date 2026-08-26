@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://piche-version-1.vercel.app/:path*",
+      "permanent": false
+    }
+  ]
+}

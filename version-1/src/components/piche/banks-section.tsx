@@ -1,8 +1,9 @@
+import Image from "next/image";
 import { BANKS } from "@/lib/piche-data";
 
 export function BanksSection() {
   return (
-    <section className="pt-(--space-section)">
+    <section id="financing" className="scroll-mt-(--nav-height) pt-(--space-section)">
       <div className="flex flex-col gap-(--space-xl) rounded-(--radius-lg-ds) bg-(--surface-card) p-(--space-xxl)">
         <div className="flex flex-col gap-(--space-sm)">
           <h2
@@ -22,9 +23,18 @@ export function BanksSection() {
               href={bank.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-22 items-center justify-center rounded-(--radius-md-ds) bg-(--surface-canvas) text-(length:--body-strong-size) font-semibold text-(--text-primary) transition-[color,box-shadow,transform] duration-(--duration-base) ease-(--ease-standard) hover:-translate-y-0.5 hover:text-(--brand-primary) hover:shadow-[0_8px_20px_-12px_rgba(0,0,0,0.25)]"
+              aria-label={`View ${bank.name} home financing offer`}
+              title={bank.name}
+              className="group flex h-22 items-center justify-center rounded-(--radius-md-ds) bg-(--surface-canvas) px-(--space-md) transition-[background-color,box-shadow,transform] duration-(--duration-base) ease-(--ease-standard) hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_8px_20px_-12px_rgba(0,0,0,0.25)]"
             >
-              {bank.name}
+              <Image
+                src={bank.logo}
+                alt=""
+                width={bank.logoWidth}
+                height={bank.logoHeight}
+                className={`${bank.logoClass} h-auto w-auto object-contain transition-transform duration-(--duration-base) ease-(--ease-standard) group-hover:scale-[1.04]`}
+              />
+              <span className="sr-only">{bank.name}</span>
             </a>
           ))}
         </div>

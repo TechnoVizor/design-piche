@@ -52,16 +52,16 @@ export function AboutSection() {
         >
           <div data-parallax="0.1" className="absolute inset-x-0 -top-[10%] -bottom-[10%]">
             <FadeImage
-              src="https://images.unsplash.com/photo-1682184805271-11671b7ecf4c?fm=jpg&q=70&w=1200&auto=format&fit=crop"
-              alt="PICHE site"
+              src="/images/piche/about-team.webp"
+              alt="PICHE project team reviewing residential development plans"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover transition-transform duration-700 ease-(--ease-standard) group-hover:scale-105"
             />
           </div>
           <PhotoCredit
-            credit="Photo by Lumbardh Plluzhina on Unsplash"
-            href="https://unsplash.com/@bardhplluzhina"
+            credit="Concept visualization"
+            href=""
           />
         </div>
       </div>

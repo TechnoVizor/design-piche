@@ -99,6 +99,9 @@
   --scrim: rgba(0, 0, 0, 0.5);
 
   --display-xl-size: clamp(3rem, 9vw, 8.25rem);
+  /* Between xl and lg: the hero headline shares its frame with chips, a
+     subhead and two buttons, so it can't run as large as a bare display line. */
+  --display-hero-size: clamp(2.5rem, 6.5vw, 6.5rem);
   --display-lg-size: clamp(2.25rem, 5vw, 4.75rem);
   --heading-xl-size: clamp(1.75rem, 2.8vw, 2.5rem);
   --heading-lg-size: clamp(1.375rem, 2vw, 1.75rem);
@@ -127,7 +130,7 @@
   --nav-height: 72px;
   --control-height: 40px;
   --input-height: 44px;
-  --search-height: 48px;
+  --search-height: var(--control-height);
 
   --radius-sm-ds: 8px;
   --radius-md-ds: 16px;
@@ -219,11 +222,61 @@
   }
 }
 
+/* Header -------------------------------------------------------------- */
+
+/*
+ * The header does not flip between two states on a scroll threshold — SiteHeader
+ * writes --header-progress (0 at the top of the page, 1 once it has been
+ * scrolled past HEADER_MORPH_DISTANCE) and every property below interpolates
+ * off it. That is why none of these carry a transition: they are driven by the
+ * scroll position itself, and a transition would only make them lag behind it.
+ */
+.header-morph {
+  --p: var(--header-progress, 0);
+  padding: calc(var(--p) * var(--space-sm)) calc(var(--p) * var(--space-lg)) 0;
+}
+
+.header-morph-shell {
+  /* 1400px is the width the floating pill settles at; below that it widens
+     back out to the full viewport as --p returns to 0. */
+  max-width: calc(1400px + (1 - var(--p)) * (100vw - 1400px));
+  border-radius: calc(var(--p) * var(--nav-height) / 2);
+  border-color: color-mix(
+    in srgb,
+    var(--border-hairline) calc(var(--p) * 100%),
+    transparent
+  );
+  /* At the top of the page the only rule is the one dividing the header from
+     the content below it; the other three fade in with the pill. */
+  border-bottom-color: var(--border-hairline);
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / calc(var(--p) * 0.28));
+}
+
 /* Motion ------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* The hero's scroll cue nudges down and settles, rather than looping a hard
+   bounce — enough to read as "there is more below" without pulling the eye
+   off the headline it sits under. */
+@keyframes scroll-cue {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  80% {
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-cue {
+    animation: scroll-cue 2.4s var(--ease-standard) infinite;
   }
 }
 
@@ -298,6 +351,9 @@ html.lenis {
   .hero-in > *:nth-child(3) {
     animation-delay: 240ms;
   }
+  .hero-in > *:nth-child(4) {
+    animation-delay: 340ms;
+  }
 }
 
 /* [data-parallax] elements are nudged by MotionInit's scroll handler via
@@ -318,4 +374,151 @@ html.lenis {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+/* ------------------------------------------------------------------ *
+ * Map pins (ProjectMap). Leaflet renders divIcons as bare divs, so the
+ * marker element itself carries .piche-pin-wrap and the state classes
+ * .is-dwelling / .is-focused that the component toggles.
+ * ------------------------------------------------------------------ */
+
+.leaflet-container {
+  font-family: inherit;
+  background: var(--surface-card);
+  border-radius: var(--radius-lg-ds);
+}
+
+/* OpenStreetMap's raster tiles are keyless but colourful. Draining most of
+   the colour out of them leaves a warm grey basemap that sits quietly next
+   to the cream surfaces and lets the teal pins carry the eye. */
+.leaflet-tile-pane {
+  filter: grayscale(0.88) sepia(0.14) brightness(1.06) contrast(0.9);
+}
+
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.78) !important;
+  font-size: 10px;
+  color: var(--text-mute);
+}
+
+.piche-pin-wrap {
+  background: none;
+  border: 0;
+}
+
+.piche-pin-wrap:focus {
+  outline: none;
+}
+
+.piche-pin {
+  position: relative;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  cursor: pointer;
+}
+
+.piche-pin__dot {
+  display: grid;
+  width: 14px;
+  height: 14px;
+  place-items: center;
+  border-radius: var(--radius-full-ds);
+  background: var(--brand-primary);
+  box-shadow:
+    0 0 0 3px var(--surface-canvas),
+    0 2px 6px rgb(0 0 0 / 0.28);
+  color: var(--text-on-primary);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    width var(--duration-base) var(--ease-standard),
+    height var(--duration-base) var(--ease-standard),
+    background-color var(--duration-base) var(--ease-standard);
+}
+
+.piche-pin--cluster .piche-pin__dot {
+  width: 26px;
+  height: 26px;
+}
+
+.piche-pin-wrap:hover .piche-pin__dot,
+.piche-pin-wrap:focus-visible .piche-pin__dot,
+.piche-pin-wrap.is-focused .piche-pin__dot {
+  width: 22px;
+  height: 22px;
+}
+
+.piche-pin-wrap.is-focused .piche-pin__dot {
+  background: var(--text-primary);
+}
+
+.piche-pin-wrap:focus-visible .piche-pin__dot {
+  box-shadow:
+    0 0 0 3px var(--surface-canvas),
+    0 0 0 6px var(--brand-primary);
+}
+
+/* The dwell ring makes the deliberate 1.2s wait legible instead of
+   feeling like the map simply failed to respond. */
+.piche-pin__ring {
+  position: absolute;
+  inset: 0;
+  width: 40px;
+  height: 40px;
+  transform: rotate(-90deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.piche-pin__ring circle {
+  fill: none;
+  stroke: var(--brand-primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 113;
+  stroke-dashoffset: 113;
+}
+
+.piche-pin-wrap.is-dwelling .piche-pin__ring {
+  opacity: 1;
+}
+
+.piche-pin-wrap.is-dwelling .piche-pin__ring circle {
+  animation: piche-dwell 1200ms linear forwards;
+}
+
+@keyframes piche-dwell {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.piche-pin__label {
+  position: absolute;
+  bottom: calc(50% + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 5px 10px;
+  border-radius: var(--radius-full-ds);
+  background: var(--surface-canvas);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.18);
+  color: var(--text-primary);
+  font-size: var(--caption-md-size);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
+}
+
+.piche-pin-wrap:hover .piche-pin__label,
+.piche-pin-wrap:focus-visible .piche-pin__label,
+.piche-pin-wrap.is-focused .piche-pin__label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

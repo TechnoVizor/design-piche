@@ -2,7 +2,7 @@ import { SiteHeader } from "@/components/piche/site-header";
 import { HeroSection } from "@/components/piche/hero-section";
 import { ProjectAssemblySection } from "@/components/piche/project-assembly-section";
 import { ProjectsSection } from "@/components/piche/projects-section";
-import { Explore3DSection } from "@/components/piche/explore-3d-section";
+import { ExploreSection } from "@/components/piche/explore-section";
 import { MarqueeSection } from "@/components/piche/marquee-section";
 import { AboutSection } from "@/components/piche/about-section";
 import { NewsSection } from "@/components/piche/news-section";
@@ -29,15 +29,15 @@ export default function Home() {
         <ProjectsSection />
         <div className="relative">
           <StickyViewingBar />
-          <Explore3DSection />
+          <ExploreSection />
           <MarqueeSection />
           <AboutSection />
           <NewsSection />
           <SocialSection />
           <BanksSection />
-          <ContactSection />
         </div>
       </main>
+      <ContactSection />
       <SiteFooter />
     </>
   );

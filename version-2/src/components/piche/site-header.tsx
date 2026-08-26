@@ -9,31 +9,10 @@ const NAV = [
   { label: "Contacts", href: "#contacts" },
 ];
 
-const CHOOSER_URL = "https://piche-chooser.vercel.app/";
-
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-(--border-divider) bg-(--frosted-white) backdrop-blur-[12px]">
       <div className="mx-auto flex h-16 max-w-(--container-max) items-center justify-between gap-6 px-8">
-        <a
-          href={CHOOSER_URL}
-          className="type-nav flex flex-none items-center gap-1.5 text-(--pewter) transition-[color] duration-[.33s] hover:text-(--text-heading)"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="flex-none"
-          >
-            <path d="M19 12H5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Versions
-        </a>
-        <span className="h-5 w-px flex-none bg-(--border-divider)" />
         <a href="#top" className="flex flex-none items-center text-[#13b5ca] hover:text-[#13b5ca]">
           <PicheWordmark className="block h-[22px] w-auto" />
         </a>

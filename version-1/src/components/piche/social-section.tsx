@@ -1,6 +1,42 @@
 import { FadeImage } from "@/components/piche/fade-image";
-import { SOCIAL_IMAGES } from "@/lib/piche-data";
+import { AmbientVideo } from "@/components/piche/ambient-video";
 import { PhotoCredit } from "@/components/piche/photo-credit";
+
+const SOCIAL_MEDIA = [
+  {
+    id: "residential-aerial",
+    type: "video" as const,
+    src: "/videos/residential-aerial.mp4",
+    poster: "/images/piche/social-balcony.webp",
+    credit: "Video by N E · Pexels",
+    creditHref:
+      "https://www.pexels.com/video/exterior-design-of-a-residential-building-4308110/",
+  },
+  {
+    id: "new-home-lifestyle",
+    type: "video" as const,
+    src: "/videos/new-home-lifestyle.mp4",
+    poster: "/images/piche/news-move-in.webp",
+    credit: "Video by Ketut Subiyanto · Pexels",
+    creditHref:
+      "https://www.pexels.com/video/a-couple-moving-in-together-on-a-new-place-4277904/",
+  },
+  {
+    id: "modern-interior",
+    type: "video" as const,
+    src: "/videos/modern-interior.mp4",
+    poster: "/images/piche/social-interior.webp",
+    credit: "Video by Taryn Elliott · Pexels",
+    creditHref: "https://www.pexels.com/video/modern-living-room-3769951/",
+  },
+  {
+    id: "material-detail",
+    type: "image" as const,
+    src: "/images/piche/social-material.webp",
+    credit: "Concept visualization",
+    creditHref: "",
+  },
+];
 
 export function SocialSection() {
   return (
@@ -11,17 +47,17 @@ export function SocialSection() {
             className="m-0 font-(family-name:--font-display) text-(length:--display-lg-size) font-bold text-(--text-primary)"
             style={{ lineHeight: 1.05, letterSpacing: "-0.025em" }}
           >
-            From our living projects
+            Life, in motion
           </h2>
           <p className="m-0 text-(length:--body-md-size) text-(--text-mute)">
-            Social media posts about the homes we are building right now
+            Architecture, interiors and the everyday moments that make a home
           </p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-(--grid-gutter) lg:grid-cols-4 lg:grid-rows-2 lg:aspect-16/7">
-        {SOCIAL_IMAGES.map((s, i) => (
+        {SOCIAL_MEDIA.map((media, i) => (
           <div
-            key={s.id}
+            key={media.id}
             data-reveal="blur"
             style={{ "--i": i } as React.CSSProperties}
             className={`group relative aspect-square overflow-hidden rounded-(--radius-md-ds) bg-(--surface-card) lg:aspect-auto ${
@@ -29,15 +65,23 @@ export function SocialSection() {
             }`}
           >
             <div data-parallax="0.08" className="absolute inset-x-0 -top-[10%] -bottom-[10%]">
-              <FadeImage
-                src={s.image}
-                alt=""
-                fill
-                sizes="(min-width: 1024px) 25vw, 50vw"
-                className="object-cover transition-transform duration-700 ease-(--ease-standard) group-hover:scale-110"
-              />
+              {media.type === "video" ? (
+                <AmbientVideo
+                  src={media.src}
+                  poster={media.poster}
+                  className="transition-transform duration-700 ease-(--ease-standard) group-hover:scale-105"
+                />
+              ) : (
+                <FadeImage
+                  src={media.src}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  className="object-cover transition-transform duration-700 ease-(--ease-standard) group-hover:scale-110"
+                />
+              )}
             </div>
-            <PhotoCredit credit={s.credit} href={s.creditHref} />
+            <PhotoCredit credit={media.credit} href={media.creditHref} />
           </div>
         ))}
         <a

@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Wordmark } from "@/components/piche/wordmark";
 import { SearchBar } from "@/components/piche/search-bar";
 import { LangSwitch } from "@/components/piche/lang-switch";
 import { PicheButton } from "@/components/piche/piche-button";
-import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "#projects", label: "Projects" },
@@ -15,43 +14,55 @@ const NAV_LINKS = [
   { href: "#contacts", label: "Contacts" },
 ];
 
+// How far the page has to scroll before the header has finished morphing from
+// the full-bleed bar into the floating pill. Long enough that the change reads
+// as a gradual settle rather than a snap the instant the page moves.
+const HEADER_MORPH_DISTANCE = 360;
+
+// Smoothstep — eases the morph in and out of its endpoints so the header does
+// not visibly start moving on the first pixel of scroll, or stop dead on the
+// last one.
+const ease = (t: number) => t * t * (3 - 2 * t);
+
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
     let ticking = false;
+    let last = -1;
+
+    const apply = () => {
+      ticking = false;
+      const t = Math.min(Math.max(window.scrollY, 0) / HEADER_MORPH_DISTANCE, 1);
+      // Quantising to 3 decimals keeps sub-pixel scroll jitter from writing a
+      // new value (and so re-styling the header) on every single frame.
+      const p = Math.round(ease(t) * 1000) / 1000;
+      if (p === last) return;
+      last = p;
+      el.style.setProperty("--header-progress", String(p));
+    };
+
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 8);
-        ticking = false;
-      });
+      requestAnimationFrame(apply);
     };
-    onScroll();
+
+    apply();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-30 transition-[padding] duration-400 ease-(--ease-standard)",
-        scrolled ? "px-(--space-lg) pt-(--space-sm)" : "px-0 pt-0",
-      )}
-    >
-      <div
-        className={cn(
-          "mx-auto flex h-(--nav-height) items-center gap-(--space-lg) bg-(--surface-canvas) px-(--container-pad) transition-[max-width,border-radius,box-shadow,border-color] duration-400 ease-(--ease-standard)",
-          scrolled
-            ? "max-w-350 rounded-(--radius-full-ds) border border-(--border-hairline) shadow-[0_8px_24px_-12px_rgba(0,0,0,0.28)]"
-            : "max-w-(--container-max) rounded-none border-b border-(--border-hairline) shadow-none",
-        )}
-      >
+    <header ref={ref} className="header-morph sticky top-0 z-30">
+      <div className="header-morph-shell mx-auto flex h-(--nav-height) items-center gap-(--space-lg) border bg-(--surface-canvas) px-(--container-pad)">
         <Link href="#top" className="flex shrink-0 items-center">
           <Wordmark text="PICHE" size={30} />
         </Link>
-        <nav className="hidden shrink-0 gap-(--space-lg) whitespace-nowrap lg:flex">
+        <nav className="ml-(--space-xl) hidden shrink-0 gap-(--space-xl) whitespace-nowrap lg:flex">
           {NAV_LINKS.map((l) => (
             <a
               key={l.href}

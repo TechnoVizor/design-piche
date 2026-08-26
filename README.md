@@ -5,9 +5,9 @@
 <h1 align="center">design-piche</h1>
 
 <p align="center">
-  Two independent implementations of the <a href="https://piche.lv">PICHE</a> home page —
-  a Latvian real-estate developer's marketing site — built side by side so the
-  customer can compare and choose one.
+  Implementations of the <a href="https://piche.lv">PICHE</a> home page — a Latvian
+  real-estate developer's marketing site. <strong>Version 1 is the live build</strong>;
+  version 2 is kept as an earlier alternative take.
 </p>
 
 <p align="center">
@@ -25,26 +25,25 @@
 
 ```mermaid
 flowchart LR
-    U([Visitor]) --> C["index.html\nchooser"]
-    C -->|Version 1| V1["version-1\nNext.js + shadcn/ui\n3D building explorer"]
-    C -->|Version 2| V2["version-2\nNext.js\n3D building explorer"]
+    U([Visitor]) --> R["repo root\nredirect"]
+    R --> V1["version-1\nNext.js + shadcn/ui\n3D building explorer"]
     V1 --> D1[(Vercel project)]
-    V2 --> D2[(Vercel project)]
+    V2["version-2\nNext.js\nearlier alternative"] -.-> D2[(Vercel project)]
 ```
 
 Each version is a fully separate Next.js app that deploys as its own Vercel
-project. The chooser is a single static page deployed from the repo root that
-previews both live sites side by side and links to whichever one is picked.
+project. The repo root no longer serves a page of its own — it redirects
+straight to version 1.
 
 ## Layout
 
 | Path | What it is |
 |---|---|
-| [`index.html`](index.html) | Split-screen chooser with live previews of both versions |
-| [`version-1/`](version-1) | Next.js + shadcn/ui build, including an interactive 3D building explorer |
-| [`version-2/`](version-2) | Next.js build, independently built, also with an interactive 3D building explorer |
+| [`vercel.json`](vercel.json) | Root redirect — sends every request to the version 1 deployment |
+| [`version-1/`](version-1) | The live build: Next.js + shadcn/ui, including an interactive 3D building explorer |
+| [`version-2/`](version-2) | Earlier alternative build, also with an interactive 3D building explorer |
 
-Both versions share the same brief (see
+Both share the same brief (see
 [`version-1/PRODUCT.md`](version-1/PRODUCT.md)) — a calm, trustworthy site
 where photography and real project data (prices, floor counts, availability)
 do the persuading, built around two moments that matter: exploring a
@@ -65,8 +64,12 @@ Then open [http://localhost:3000](http://localhost:3000).
 ## Deployment
 
 Each version deploys as its own Vercel project with **Root Directory** set to
-that folder (`version-1` or `version-2`). The chooser (`index.html`) deploys
-separately from the repo root and links to both live URLs.
+that folder (`version-1` or `version-2`). The repo-root project carries no page
+of its own — [`vercel.json`](vercel.json) redirects every path (307, temporary)
+to `piche-version-1.vercel.app`, so visitors land on version 1 immediately.
+
+To point the root at a different build later, change the `destination` in
+`vercel.json`.
 
 ## License
 
