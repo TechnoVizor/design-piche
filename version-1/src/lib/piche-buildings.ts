@@ -275,7 +275,9 @@ function rowTerrace(b: Building, M: Materials, accent: THREE.Material | null): B
       depthWrite: false,
     });
     const pick = box(RW - 0.3, H - 0.3, 0.06, pickMat, bx, H / 2 + 0.35, front + 0.9, false);
-    pick.userData = { building: b.id, floor: 1, bay: u };
+    // A house-sized target is easy to click but too loud when every house in
+    // the terrace is tinted at once, so ambient status tint is damped.
+    pick.userData = { building: b.id, floor: 1, bay: u, soft: true };
     picks.push(pick);
     g.add(pick);
 
@@ -301,8 +303,14 @@ export function buildBuilding(b: Building, M: Materials): BuildingParts {
   return b.kind === "row" ? rowTerrace(b, M, accent) : apartmentBlock(b, M, accent);
 }
 
-/** Footprint half-extents in world units, used to keep trees off the buildings. */
+/**
+ * Half-extents along the world axes, with the building's own rotation folded
+ * in — a wing turned 90° is wide in Z, not in X.
+ */
 export function footprint(b: Building) {
-  const w = (b.kind === "row" ? RW : UW) * b.bays;
-  return { halfW: w / 2, halfD: b.depth / 2 + 5 };
+  const halfW = ((b.kind === "row" ? RW : UW) * b.bays) / 2;
+  const halfD = b.depth / 2;
+  const c = Math.abs(Math.cos(b.rot));
+  const s = Math.abs(Math.sin(b.rot));
+  return { halfW, halfD, extentX: halfW * c + halfD * s, extentZ: halfW * s + halfD * c };
 }

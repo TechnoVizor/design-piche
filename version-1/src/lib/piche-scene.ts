@@ -32,6 +32,9 @@ export type SceneHandle = {
 
 const BG = 0xe8e6de;
 const ACCENT = 0x13b5ca;
+/** Resting orbit angle. Slightly aerial, like the reference renders. */
+const HOME_THETA = -0.55;
+const HOME_ELEV = 0.4;
 
 function statusHex(status: Unit["status"]) {
   return status === "available" ? 0x1f7a4d : status === "reserved" ? 0x7e238b : 0x91918c;
@@ -47,7 +50,8 @@ function fitDist(w: number, h: number, radius: number) {
   const vfov = (fovFor(w, h) * Math.PI) / 180;
   const aspect = (w || 900) / (h || 620);
   const half = Math.min(vfov / 2, Math.atan(Math.tan(vfov / 2) * aspect));
-  return Math.max(30, Math.min(240, (radius * 1.12) / Math.tan(half)));
+  // A little more than the bare radius so no wing is ever clipped at the edge.
+  return Math.max(30, Math.min(240, (radius * 1.22) / Math.tan(half)));
 }
 
 /** Small deterministic PRNG so a site looks identical on every render. */
@@ -117,7 +121,14 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   const d0 = fitDist(w0, h0, radius);
-  const orb = { theta: -0.55, elev: 0.34, dist: d0, tTheta: -0.55, tElev: 0.34, tDist: d0 };
+  const orb = {
+    theta: HOME_THETA,
+    elev: HOME_ELEV,
+    dist: d0,
+    tTheta: HOME_THETA,
+    tElev: HOME_ELEV,
+    tDist: d0,
+  };
   let hover: THREE.Mesh | null = null;
   let userZoomed = false;
   let spin = true;
@@ -217,10 +228,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     const clearOf = (x: number, z: number) =>
       !site.buildings.some((b) => {
         const f = footprint(b);
-        const dx = Math.abs(x - b.x);
-        const dz = Math.abs(z - b.z);
-        const reach = Math.max(f.halfW, f.halfD) + 3;
-        return dx < reach && dz < reach;
+        return Math.abs(x - b.x) < f.extentX + 6 && Math.abs(z - b.z) < f.extentZ + 6;
       });
 
     if (site.terrain === "forest") {
@@ -243,10 +251,12 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
         if (!clearOf(x, z)) continue;
         broadleaf(x, z, 0.8 + rnd() * 0.5);
       }
-      // Muted neighbouring blocks so the site reads as part of a city.
+      // Muted neighbouring blocks so the site reads as part of a city. They
+      // sit on the ground, not floating above or sunk into it.
       for (let i = 0; i < 7; i++) {
         const bx = -radius * 2.4 + i * radius * 0.8;
-        g.add(box(16 + rnd() * 8, 9 + rnd() * 9, 13, M.roof, bx, 5, -roadZ - 20 - rnd() * 8));
+        const bh = 9 + rnd() * 9;
+        g.add(box(16 + rnd() * 8, bh, 13, M.roof, bx, bh / 2, -roadZ - 20 - rnd() * 8));
       }
       for (let i = 0; i < 5; i++) car(-radius * 1.3 + i * 7, roadZ - 4, 0, i % 2 === 0);
     } else {
@@ -290,11 +300,13 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
       26,
       ...site.buildings.map((b) => {
         const f = footprint(b);
-        return Math.hypot(Math.abs(b.x) + f.halfW, Math.abs(b.z) + f.halfD);
+        return Math.hypot(Math.abs(b.x) + f.extentX, Math.abs(b.z) + f.extentZ);
       }),
     );
     const tallest = Math.max(...site.buildings.map((b) => b.floors * 3));
-    lookAtY = tallest * 0.55;
+    // Aim above the ground plane even for the low terraces, or the horizon
+    // rides up the frame and half the view is empty grass.
+    lookAtY = Math.max(6, tallest * 0.55);
 
     const g = new THREE.Group();
     addTerrain(g, site, makeRandom(seedOf(site.id)));
@@ -319,8 +331,8 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     sun.position.set(radius, radius * 1.4, radius * 0.8);
 
     userZoomed = false;
-    orb.tTheta = -0.55;
-    orb.tElev = 0.34;
+    orb.tTheta = HOME_THETA;
+    orb.tElev = HOME_ELEV;
     orb.tDist = fitDist(host.clientWidth, host.clientHeight, radius);
     orb.dist = orb.tDist;
     paint();
@@ -337,6 +349,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
       const mat = m.material as THREE.MeshBasicMaterial;
       const isSel = u && u.id === selection.unit;
       const onFloor = d.building === selection.building && d.floor === selection.floor;
+      const soft = (m.userData as { soft?: boolean }).soft ? 0.45 : 1;
       if (isSel) {
         mat.color.setHex(ACCENT);
         mat.opacity = 0.66;
@@ -345,7 +358,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
         mat.opacity = 0.3;
       } else if (onFloor) {
         mat.color.setHex(statusHex(u ? u.status : "sold"));
-        mat.opacity = 0.34;
+        mat.opacity = 0.34 * soft;
       } else {
         mat.opacity = 0;
       }
@@ -486,8 +499,8 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     },
     resetView() {
       userZoomed = false;
-      orb.tTheta = -0.55;
-      orb.tElev = 0.34;
+      orb.tTheta = HOME_THETA;
+      orb.tElev = HOME_ELEV;
       orb.tDist = fitDist(host.clientWidth, host.clientHeight, radius);
     },
     dispose() {
