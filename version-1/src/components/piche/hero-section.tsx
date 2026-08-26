@@ -1,7 +1,6 @@
 import { FadeImage } from "@/components/piche/fade-image";
 import { PicheButton } from "@/components/piche/piche-button";
 import { PinOverlayPill } from "@/components/piche/pin-overlay-pill";
-import { SearchBar } from "@/components/piche/search-bar";
 import { FilterChip } from "@/components/piche/filter-chip";
 import { PROJECTS } from "@/lib/piche-data";
 
@@ -13,33 +12,35 @@ export function HeroSection() {
   return (
     <>
       <section className="hero-in flex flex-col items-center gap-(--space-xl) py-(--space-section) pb-(--space-xxl) text-center">
-        <h1
-          className="m-0 max-w-245 font-(family-name:--font-display) text-(length:--display-xl-size) font-semibold text-(--text-primary)"
-          style={{ lineHeight: 1.02, letterSpacing: "-0.03em" }}
-        >
-          New apartments for sale
-        </h1>
-        <p className="m-0 max-w-180 text-(length:--heading-lg-size) leading-[1.35] text-(--text-body)">
-          Energy-efficient homes across Rīga, Mārupe and the surrounding areas
-        </p>
-        <div className="flex gap-(--space-md)">
-          <PicheButton asChild>
-            <a href="#projects">See all projects</a>
-          </PicheButton>
-          <PicheButton asChild variant="secondary">
-            <a href="#explore">Explore in 3D</a>
-          </PicheButton>
+        <div>
+          <h1
+            data-parallax="0.08"
+            className="m-0 max-w-245 font-(family-name:--font-display) text-(length:--display-xl-size) font-semibold text-(--text-primary)"
+            style={{ lineHeight: 1.02, letterSpacing: "-0.03em" }}
+          >
+            New apartments for sale
+          </h1>
+        </div>
+        <div>
+          <p
+            data-parallax="0.08"
+            className="m-0 max-w-180 text-(length:--heading-lg-size) leading-[1.35] text-(--text-body)"
+          >
+            Energy-efficient homes across Rīga, Mārupe and the surrounding
+            areas
+          </p>
+        </div>
+        <div>
+          <div data-parallax="0.08" className="flex gap-(--space-md)">
+            <PicheButton asChild>
+              <a href="#projects">See all projects</a>
+            </PicheButton>
+            <PicheButton asChild variant="secondary">
+              <a href="#explore">Explore in 3D</a>
+            </PicheButton>
+          </div>
         </div>
       </section>
-
-      <div
-        data-parallax="0.35"
-        className="relative z-20 mx-auto -mb-8 w-full max-w-2xl px-(--space-lg)"
-      >
-        <div className="rounded-(--radius-full-ds) bg-(--surface-canvas) p-(--space-sm) shadow-[0_20px_44px_-16px_rgba(0,0,0,0.22)]">
-          <SearchBar placeholder="Search projects, apartments, locations" />
-        </div>
-      </div>
 
       <section
         data-reveal="scale"

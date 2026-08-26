@@ -227,6 +227,12 @@
   }
 }
 
+/* Lenis drives scroll smoothing itself via JS once active — the native
+   smooth-scroll behavior above would otherwise fight it on anchor jumps. */
+html.lenis {
+  scroll-behavior: auto !important;
+}
+
 @keyframes reveal-up {
   from {
     opacity: 0;

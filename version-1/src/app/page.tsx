@@ -12,10 +12,12 @@ import { ContactSection } from "@/components/piche/contact-section";
 import { StickyViewingBar } from "@/components/piche/sticky-viewing-bar";
 import { SiteFooter } from "@/components/piche/site-footer";
 import { MotionInit } from "@/components/piche/motion-init";
+import { SmoothScroll } from "@/components/piche/smooth-scroll";
 
 export default function Home() {
   return (
     <>
+      <SmoothScroll />
       <MotionInit />
       <SiteHeader />
       <main
