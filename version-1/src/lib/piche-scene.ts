@@ -5,14 +5,26 @@ import {
   buildBuilding,
   createMaterials,
   footprint,
+  FH,
+  ROW_FH,
   type Materials,
 } from "@/lib/piche-buildings";
+import {
+  cellTone,
+  isDimmed,
+  windowLit,
+  type Cell,
+  type Selection,
+} from "@/lib/unit-highlight";
 
-export type Selection = { building: string; floor: number; unit: string | null };
-export type PickData = { building: string; floor: number; bay: number };
+export type { Selection };
+export type PickData = Cell;
 
 export type SceneCallbacks = {
   onPick(d: PickData): void;
+  /** Fired when the pointer lands on bare ground, so the UI can bring the
+   *  buildings it had cleared away back. */
+  onClear(): void;
   /** Fired when a drag starts, so the UI can switch the rotate button off. */
   onDragStart(): void;
   /** Fired when the wheel was left alone so the page could scroll. */
@@ -22,6 +34,8 @@ export type SceneCallbacks = {
 export type SceneHandle = {
   setSite(site: Site, units: Unit[]): void;
   setSelection(sel: Selection): void;
+  /** Fades every building but the selected one away, and frames what is left. */
+  setIsolated(on: boolean): void;
   setSpin(on: boolean): void;
   /** Pauses the render loop while the viewer is hidden behind the map. */
   setActive(on: boolean): void;
@@ -31,14 +45,81 @@ export type SceneHandle = {
 };
 
 const BG = 0xe8e6de;
-const ACCENT = 0x13b5ca;
 /** Resting orbit angle. Slightly aerial, like the reference renders. */
 const HOME_THETA = -0.55;
 const HOME_ELEV = 0.4;
+/** How much of a cleared-away building is left behind. 0 is out of the way. */
+const GHOST_OPACITY = 0;
 
-function statusHex(status: Unit["status"]) {
-  return status === "available" ? 0x1f7a4d : status === "reserved" ? 0x7e238b : 0x91918c;
+const hexCache = new Map<string, number>();
+function hexNum(hex: string) {
+  let n = hexCache.get(hex);
+  if (n === undefined) {
+    n = parseInt(hex.slice(1), 16);
+    hexCache.set(hex, n);
+  }
+  return n;
 }
+
+/** A material a building can fade, remembered as it was at full strength. */
+type FadeTarget = {
+  mat: THREE.Material;
+  opacity: number;
+  transparent: boolean;
+  depthWrite: boolean;
+};
+
+/**
+ * Hands one building private copies of every material it shares with the rest
+ * of the site, so it can be faded out on its own. Click targets are left
+ * alone: their opacity belongs to the selection overlay, not to the fade.
+ */
+function collectFadeTargets(
+  group: THREE.Group,
+  skip: Set<THREE.Object3D>,
+  shared: Set<THREE.Material>,
+): FadeTarget[] {
+  const owned = new Map<THREE.Material, THREE.Material>();
+  const targets: FadeTarget[] = [];
+
+  const own = (mat: THREE.Material) => {
+    const found = owned.get(mat);
+    if (found) return found;
+    // Anything already unique to this building — window panes, the stairwell
+    // stripe — can be driven directly.
+    const copy = shared.has(mat) ? mat.clone() : mat;
+    owned.set(mat, copy);
+    targets.push({
+      mat: copy,
+      opacity: copy.opacity,
+      transparent: copy.transparent,
+      depthWrite: copy.depthWrite,
+    });
+    return copy;
+  };
+
+  group.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (!m.isMesh || skip.has(m)) return;
+    m.material = Array.isArray(m.material) ? m.material.map(own) : own(m.material);
+  });
+  return targets;
+}
+
+/** One building as the viewer handles it: fadeable, focusable, clickable. */
+type BuildingView = {
+  id: string;
+  group: THREE.Group;
+  picks: THREE.Mesh[];
+  fades: FadeTarget[];
+  /** Where the camera looks when this building has the site to itself. */
+  focus: THREE.Vector3;
+  /** Framing radius for that same solo view. */
+  focusRadius: number;
+  /** 0 at full strength, 1 once faded out of the way. */
+  ghost: number;
+  target: number;
+};
 
 function fovFor(w: number, h: number) {
   const aspect = (w || 900) / (h || 620);
@@ -114,6 +195,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
   let siteGroup: THREE.Group | null = null;
   let picks: THREE.Mesh[] = [];
   let windows: THREE.Mesh[] = [];
+  let views: BuildingView[] = [];
   let unitByKey = new Map<string, Unit>();
   let radius = 34;
   let lookAtY = 8.5;
@@ -129,10 +211,33 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     tElev: HOME_ELEV,
     tDist: d0,
   };
+  /** Where the orbit is centred, and where it is heading. */
+  const siteFocus = new THREE.Vector3(0, lookAtY, 0);
+  const lookAt = siteFocus.clone();
+  const lookTarget = siteFocus.clone();
+
+  /** Which way each click target faces, so the far facade stays unclickable. */
+  const facings = new WeakMap<THREE.Mesh, THREE.Vector3>();
+  const UP = new THREE.Vector3(0, 1, 0);
+
   let hover: THREE.Mesh | null = null;
   let userZoomed = false;
   let spin = true;
+  let isolated = false;
   let selection: Selection = { building: "", floor: 1, unit: null };
+
+  /** A hairline around the chosen apartment, so it stays findable. */
+  const outlineMat = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.92,
+    // Nudged towards the camera in depth only, so it never fights the balcony
+    // rail sitting a few centimetres behind it.
+    polygonOffset: true,
+    polygonOffsetFactor: -3,
+    polygonOffsetUnits: -3,
+  });
+  let outline: THREE.LineSegments | null = null;
 
   /* ---------------------------------------------------------------- *
    * Site construction
@@ -140,6 +245,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
 
   function disposeSite() {
     if (!siteGroup) return;
+    drawOutline(null);
     siteGroup.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.isMesh) return;
@@ -153,6 +259,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     siteGroup = null;
     picks = [];
     windows = [];
+    views = [];
     hover = null;
   }
 
@@ -316,6 +423,28 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
       g.add(parts.group);
       picks.push(...parts.picks);
       windows.push(...parts.windows);
+
+      // A block carries a target per apartment on both long facades. The one
+      // round the back is hidden behind its own building, so record which way
+      // each faces and let the raycast ignore whatever points away.
+      const out = new THREE.Vector3(0, 0, 1).applyAxisAngle(UP, b.rot);
+      for (const p of parts.picks) {
+        facings.set(p, out.clone().multiplyScalar(p.position.z < 0 ? -1 : 1));
+      }
+
+      const fp = footprint(b);
+      const height = b.kind === "row" ? 0.35 + ROW_FH * 2 : 0.5 + FH * b.floors;
+      views.push({
+        id: b.id,
+        group: parts.group,
+        picks: parts.picks,
+        fades: collectFadeTargets(parts.group, new Set(parts.picks), sharedMaterials),
+        focus: new THREE.Vector3(b.x, height * 0.5, b.z),
+        // Enough to hold the whole block, tall or wide, without cropping it.
+        focusRadius: Math.max(12, Math.hypot(fp.extentX, fp.extentZ), height * 0.9),
+        ghost: 0,
+        target: 0,
+      });
     }
 
     scene.add(g);
@@ -330,10 +459,14 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     sun.shadow.camera.updateProjectionMatrix();
     sun.position.set(radius, radius * 1.4, radius * 0.8);
 
+    isolated = false;
     userZoomed = false;
     orb.tTheta = HOME_THETA;
     orb.tElev = HOME_ELEV;
-    orb.tDist = fitDist(host.clientWidth, host.clientHeight, radius);
+    siteFocus.set(0, lookAtY, 0);
+    lookAt.copy(siteFocus);
+    lookTarget.copy(siteFocus);
+    applyIsolation();
     orb.dist = orb.tDist;
     paint();
   }
@@ -342,30 +475,41 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
    * Painting selection state
    * ---------------------------------------------------------------- */
 
+  /** The apartment under the cursor, if the pointer is on a live building. */
+  const hoverCell = () => (hover ? (hover.userData as Cell) : null);
+
+  function drawOutline(pick: THREE.Mesh | null) {
+    if (outline) {
+      outline.removeFromParent();
+      outline.geometry.dispose();
+      outline = null;
+    }
+    if (!pick) return;
+    // Parented to the click target, so it inherits the building's placement
+    // and rotation for free.
+    outline = new THREE.LineSegments(new THREE.EdgesGeometry(pick.geometry), outlineMat);
+    outline.renderOrder = 3;
+    pick.add(outline);
+  }
+
   function paint() {
-    picks.forEach((m) => {
-      const d = m.userData as PickData;
-      const u = unitByKey.get(`${d.building}-${d.floor}-${d.bay}`);
+    const ctx = { selection, hover: hoverCell() };
+    let chosen: THREE.Mesh | null = null;
+
+    for (const m of picks) {
+      const cell = m.userData as Cell;
+      const u = unitByKey.get(`${cell.building}-${cell.floor}-${cell.bay}`) ?? null;
+      const tone = cellTone(cell, u, ctx);
       const mat = m.material as THREE.MeshBasicMaterial;
-      const isSel = u && u.id === selection.unit;
-      const onFloor = d.building === selection.building && d.floor === selection.floor;
-      const soft = (m.userData as { soft?: boolean }).soft ? 0.45 : 1;
-      if (isSel) {
-        mat.color.setHex(ACCENT);
-        mat.opacity = 0.66;
-      } else if (hover === m) {
-        mat.color.setHex(ACCENT);
-        mat.opacity = 0.3;
-      } else if (onFloor) {
-        mat.color.setHex(statusHex(u ? u.status : "sold"));
-        mat.opacity = 0.34 * soft;
-      } else {
-        mat.opacity = 0;
-      }
-    });
+      mat.color.setHex(hexNum(tone.hex));
+      mat.opacity = tone.opacity;
+      if (u && u.id === selection.unit) chosen = m;
+    }
+
+    if ((outline ? outline.parent : null) !== chosen) drawOutline(chosen);
+
     windows.forEach((m) => {
-      const d = m.userData as PickData;
-      const lit = d.building === selection.building && d.floor === selection.floor;
+      const lit = windowLit(m.userData as Cell, ctx);
       const mat = m.material as THREE.MeshStandardMaterial;
       mat.color.setHex(lit ? 0x4a5a68 : 0x2c3945);
       mat.emissive.setHex(lit ? 0x2a3a52 : 0x000000);
@@ -373,16 +517,83 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
   }
 
   /* ---------------------------------------------------------------- *
+   * Clearing the other buildings out of the way
+   * ---------------------------------------------------------------- */
+
+  /** Aims the orbit at whatever is left standing. */
+  function applyFraming() {
+    const solo =
+      isolated && views.length > 1
+        ? (views.find((v) => v.id === selection.building) ?? null)
+        : null;
+    lookTarget.copy(solo ? solo.focus : siteFocus);
+    if (!userZoomed) {
+      orb.tDist = fitDist(host.clientWidth, host.clientHeight, solo ? solo.focusRadius : radius);
+    }
+  }
+
+  function applyIsolation() {
+    views.forEach((v) => {
+      v.target = isDimmed(v.id, isolated, selection) ? 1 : 0;
+    });
+    // A building on its way out must not keep the cursor it was carrying.
+    const held = hoverCell();
+    if (held && views.some((v) => v.id === held.building && v.target > 0.5)) {
+      hover = null;
+      el.style.cursor = "grab";
+    }
+    applyFraming();
+  }
+
+  /** Click targets on buildings that have not been cleared away. */
+  const liveTargets = () => views.flatMap((v) => (v.target > 0.5 ? [] : v.picks));
+
+  /** Eases each building towards its target strength, once per frame. */
+  function stepFades() {
+    for (const v of views) {
+      if (v.ghost === v.target) continue;
+      v.ghost += (v.target - v.ghost) * 0.14;
+      if (Math.abs(v.target - v.ghost) < 0.005) v.ghost = v.target;
+
+      const k = 1 - v.ghost * (1 - GHOST_OPACITY);
+      for (const f of v.fades) {
+        const blend = f.transparent || k < 0.999;
+        // Switching blending on and off recompiles the program, so only touch
+        // it on the two frames where it actually flips.
+        if (f.mat.transparent !== blend) {
+          f.mat.transparent = blend;
+          f.mat.needsUpdate = true;
+        }
+        f.mat.opacity = f.opacity * k;
+        // A half-faded wall must not go on hiding what stands behind it.
+        f.mat.depthWrite = f.depthWrite && k > 0.98;
+      }
+      v.group.visible = k > 0.004;
+    }
+  }
+
+  /* ---------------------------------------------------------------- *
    * Input
    * ---------------------------------------------------------------- */
 
+  /**
+   * What the pointer is over: the nearest apartment on a facade turned towards
+   * the camera, plus whether it grazed a building at all — clicking clean
+   * through the site is how the whole site is asked for back.
+   */
   const castPick = (e: PointerEvent) => {
     const rect = el.getBoundingClientRect();
     pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects(picks, false);
-    return hits.length ? hits[0] : null;
+    // Only what is still standing: a raycast does not skip hidden meshes.
+    const hits = raycaster.intersectObjects(liveTargets(), false);
+    const dir = raycaster.ray.direction;
+    const front = hits.find((h) => {
+      const facing = facings.get(h.object as THREE.Mesh);
+      return facing === undefined || facing.dot(dir) < 0;
+    });
+    return { mesh: front ? (front.object as THREE.Mesh) : null, grazed: hits.length > 0 };
   };
 
   let down: { x: number; y: number; moved: boolean } | null = null;
@@ -395,8 +606,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
 
   const onPointerMove = (e: PointerEvent) => {
     if (!down) {
-      const hit = castPick(e);
-      const next = (hit ? hit.object : null) as THREE.Mesh | null;
+      const next = castPick(e).mesh;
       if (next !== hover) {
         hover = next;
         el.style.cursor = next ? "pointer" : "grab";
@@ -419,8 +629,11 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
   const onPointerUp = (e: PointerEvent) => {
     el.style.cursor = "grab";
     if (down && !down.moved) {
-      const hit = castPick(e);
-      if (hit) cb.onPick(hit.object.userData as PickData);
+      const { mesh, grazed } = castPick(e);
+      if (mesh) cb.onPick(mesh.userData as PickData);
+      // Bare ground is how you ask for the whole site back. A click that only
+      // brushed the far side of a block is a miss, not a request.
+      else if (!grazed) cb.onClear();
     }
     down = null;
   };
@@ -456,7 +669,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     camera.fov = fovFor(cw, ch);
     camera.updateProjectionMatrix();
     renderer.setSize(cw, ch);
-    if (!userZoomed) orb.tDist = fitDist(cw, ch, radius);
+    applyFraming();
   });
   ro.observe(host);
 
@@ -469,14 +682,16 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     orb.theta += (orb.tTheta - orb.theta) * 0.1;
     orb.elev += (orb.tElev - orb.elev) * 0.1;
     orb.dist += (orb.tDist - orb.dist) * 0.08;
+    lookAt.lerp(lookTarget, 0.08);
+    stepFades();
     const cy = Math.cos(orb.elev);
     const sy = Math.sin(orb.elev);
     camera.position.set(
-      orb.dist * cy * Math.sin(orb.theta),
+      lookAt.x + orb.dist * cy * Math.sin(orb.theta),
       4 + orb.dist * sy,
-      orb.dist * cy * Math.cos(orb.theta),
+      lookAt.z + orb.dist * cy * Math.cos(orb.theta),
     );
-    camera.lookAt(0, lookAtY, 0);
+    camera.lookAt(lookAt);
     renderer.render(scene, camera);
   };
   tick();
@@ -485,6 +700,12 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
     setSite,
     setSelection(sel) {
       selection = sel;
+      applyIsolation();
+      paint();
+    },
+    setIsolated(on) {
+      isolated = on;
+      applyIsolation();
       paint();
     },
     setSpin(on) {
@@ -501,7 +722,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
       userZoomed = false;
       orb.tTheta = HOME_THETA;
       orb.tElev = HOME_ELEV;
-      orb.tDist = fitDist(host.clientWidth, host.clientHeight, radius);
+      applyFraming();
     },
     dispose() {
       cancelAnimationFrame(raf);
@@ -512,6 +733,7 @@ export function createScene(host: HTMLElement, cb: SceneCallbacks): SceneHandle 
       el.removeEventListener("pointercancel", onPointerCancel);
       el.removeEventListener("wheel", onWheel);
       disposeSite();
+      outlineMat.dispose();
       sharedMaterials.forEach((m) => m.dispose());
       renderer.dispose();
       if (el.parentNode === host) host.removeChild(el);

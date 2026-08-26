@@ -178,6 +178,16 @@ export function HeroSection() {
                 {active.description}
               </p>
 
+              {/* Where the viewing bar rests before it docks. Nothing is drawn
+                  into it — ViewingBar renders one fixed copy of the bar for the
+                  whole page and measures this slot to line itself up with the
+                  hero — but the room still has to be reserved here. */}
+              <div
+                data-viewing-bar-slot
+                aria-hidden="true"
+                className="h-(--viewing-bar-height) w-full max-w-160"
+              />
+
               <div className="flex flex-wrap gap-(--space-md)">
                 <PicheButton asChild>
                   <a href="#projects">See all projects</a>

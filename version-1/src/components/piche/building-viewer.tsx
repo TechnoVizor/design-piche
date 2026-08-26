@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Site, Unit } from "@/lib/piche-data";
 import { createScene, type SceneHandle, type Selection } from "@/lib/piche-scene";
+import { STATUS_ORDER, STATUS_TONES } from "@/lib/unit-highlight";
 import { PicheButton } from "@/components/piche/piche-button";
 import { PinOverlayPill } from "@/components/piche/pin-overlay-pill";
 
@@ -11,6 +12,9 @@ export type BuildingViewerProps = {
   units: Unit[];
   selection: Selection;
   onSelect: (sel: Selection) => void;
+  /** True once a building has been opened and the others were cleared away. */
+  isolated: boolean;
+  onIsolatedChange: (on: boolean) => void;
   spin: boolean;
   onSpinChange: (on: boolean) => void;
   onBack: () => void;
@@ -23,6 +27,8 @@ export function BuildingViewer({
   units,
   selection,
   onSelect,
+  isolated,
+  onIsolatedChange,
   spin,
   onSpinChange,
   onBack,
@@ -33,9 +39,9 @@ export function BuildingViewer({
   const hintTimer = useRef<number | null>(null);
   const [hint, setHint] = useState(false);
 
-  const live = useRef({ units, onSelect, onSpinChange });
+  const live = useRef({ units, onSelect, onSpinChange, onIsolatedChange });
   useEffect(() => {
-    live.current = { units, onSelect, onSpinChange };
+    live.current = { units, onSelect, onSpinChange, onIsolatedChange };
   });
 
   useEffect(() => {
@@ -52,6 +58,9 @@ export function BuildingViewer({
           floor: d.floor,
           unit: u ? u.id : null,
         });
+      },
+      onClear() {
+        live.current.onIsolatedChange(false);
       },
       onDragStart() {
         live.current.onSpinChange(false);
@@ -80,6 +89,10 @@ export function BuildingViewer({
   }, [selection]);
 
   useEffect(() => {
+    sceneRef.current?.setIsolated(isolated);
+  }, [isolated]);
+
+  useEffect(() => {
     sceneRef.current?.setSpin(spin);
   }, [spin]);
 
@@ -97,6 +110,11 @@ export function BuildingViewer({
         <PicheButton variant="secondary" size="sm" onClick={onBack}>
           ‹ Back to map
         </PicheButton>
+        {isolated && site.buildings.length > 1 && (
+          <PicheButton variant="secondary" size="sm" onClick={() => onIsolatedChange(false)}>
+            Show all buildings
+          </PicheButton>
+        )}
         <PinOverlayPill>
           {selectedUnit
             ? `${selectedUnit.name} · ${selectedUnit.rooms} rooms · ${selectedUnit.area} m²`
@@ -130,18 +148,18 @@ export function BuildingViewer({
       </div>
 
       <div className="absolute bottom-(--space-lg) left-(--space-lg) flex flex-wrap items-center gap-x-(--space-lg) gap-y-(--space-md) rounded-(--radius-lg-ds) bg-(--surface-canvas) px-3.5 py-2.5">
-        <span className="flex items-center gap-(--space-sm) text-(length:--caption-md-size) text-(--text-body)">
-          <span className="h-2.5 w-2.5 rounded-full bg-(--status-success)" />
-          Available
-        </span>
-        <span className="flex items-center gap-(--space-sm) text-(length:--caption-md-size) text-(--text-body)">
-          <span className="h-2.5 w-2.5 rounded-full bg-(--accent-purple)" />
-          Reserved
-        </span>
-        <span className="flex items-center gap-(--space-sm) text-(length:--caption-md-size) text-(--text-body)">
-          <span className="h-2.5 w-2.5 rounded-full bg-(--text-disabled)" />
-          Sold
-        </span>
+        {STATUS_ORDER.map((status) => (
+          <span
+            key={status}
+            className="flex items-center gap-(--space-sm) text-(length:--caption-md-size) text-(--text-body)"
+          >
+            <span
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ background: STATUS_TONES[status].hex }}
+            />
+            {STATUS_TONES[status].label}
+          </span>
+        ))}
       </div>
 
       {/* Shown when a plain wheel scroll passed through to the page, so the

@@ -9,7 +9,8 @@ import { NewsSection } from "@/components/piche/news-section";
 import { SocialSection } from "@/components/piche/social-section";
 import { BanksSection } from "@/components/piche/banks-section";
 import { ContactSection } from "@/components/piche/contact-section";
-import { StickyViewingBar } from "@/components/piche/sticky-viewing-bar";
+import { ViewingBar } from "@/components/piche/viewing-bar";
+import { ViewingRequestProvider } from "@/components/piche/viewing-request-provider";
 import { SiteFooter } from "@/components/piche/site-footer";
 import { MotionInit } from "@/components/piche/motion-init";
 import { SmoothScroll } from "@/components/piche/smooth-scroll";
@@ -20,24 +21,26 @@ export default function Home() {
       <SmoothScroll />
       <MotionInit />
       <SiteHeader />
-      <main
-        id="top"
-        className="mx-auto max-w-(--container-max) scroll-mt-(--nav-height) bg-(--surface-soft) px-(--container-pad) pb-(--space-section)"
-      >
-        <HeroSection />
-        <ProjectAssemblySection />
-        <ProjectsSection />
-        <div className="relative">
-          <StickyViewingBar />
+      {/* The floating bar and the contact form are one request in two places,
+          so they share a draft — see ViewingRequestProvider. */}
+      <ViewingRequestProvider>
+        <main
+          id="top"
+          className="mx-auto max-w-(--container-max) scroll-mt-(--nav-height) bg-(--surface-soft) px-(--container-pad) pb-(--space-section)"
+        >
+          <HeroSection />
+          <ProjectAssemblySection />
+          <ProjectsSection />
           <ExploreSection />
           <MarqueeSection />
           <AboutSection />
           <NewsSection />
           <SocialSection />
           <BanksSection />
-        </div>
-      </main>
-      <ContactSection />
+        </main>
+        <ContactSection />
+        <ViewingBar />
+      </ViewingRequestProvider>
       <SiteFooter />
     </>
   );

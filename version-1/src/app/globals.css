@@ -131,6 +131,10 @@
   --control-height: 40px;
   --input-height: 44px;
   --search-height: var(--control-height);
+  /* The collapsed viewing bar: a 44px control with 8px of padding above and
+     below it. The hero reserves exactly this much room for it (see
+     [data-viewing-bar-slot]), so the two have to agree. */
+  --viewing-bar-height: 60px;
 
   --radius-sm-ds: 8px;
   --radius-md-ds: 16px;
@@ -353,6 +357,50 @@ html.lenis {
   }
   .hero-in > *:nth-child(4) {
     animation-delay: 340ms;
+  }
+  .hero-in > *:nth-child(5) {
+    animation-delay: 440ms;
+  }
+
+  /* The slot is only a placeholder the floating bar lines itself up against.
+     Letting it ride the column's entrance transform would have the bar
+     measure it mid-flight and settle 20px off its mark. */
+  .hero-in > [data-viewing-bar-slot] {
+    animation: none;
+  }
+}
+
+/* Viewing bar --------------------------------------------------------- */
+
+/*
+ * One bar with two homes: it starts in the hero and ends up docked at the foot
+ * of the viewport. ViewingBar writes the journey into --viewing-bar-progress
+ * (0 in the hero, 1 once docked) alongside the transform, and — as with the
+ * header — nothing below transitions, because the scroll position is the
+ * animation and a transition would only make it lag.
+ */
+.viewing-bar:not([data-ready]) {
+  opacity: 0;
+}
+
+.viewing-bar-card {
+  --p: var(--viewing-bar-progress, 0);
+  /* Barely lifted while it sits on the hero footage, which already separates
+     it from its background; properly raised once it is floating over the
+     page's own content and has to read as being in front of it. */
+  box-shadow: 0 calc(10px + var(--p) * 14px) calc(24px + var(--p) * 24px)
+    calc(-10px - var(--p) * 8px) rgb(0 0 0 / calc(0.16 + var(--p) * 0.2));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Arrives with the hero copy it sits under, a beat after the last line. */
+  .viewing-bar-enter {
+    animation: reveal-up 640ms var(--ease-standard) 340ms both;
+  }
+
+  [data-viewing-panel="open"] [data-viewing-field] {
+    animation: reveal-up 420ms var(--ease-standard) both;
+    animation-delay: calc(120ms + var(--i, 0) * 60ms);
   }
 }
 

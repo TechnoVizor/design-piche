@@ -2,14 +2,9 @@
 
 import { formatMoney, type Site, type Unit } from "@/lib/piche-data";
 import type { Selection } from "@/lib/piche-scene";
+import { STATUS_TONES } from "@/lib/unit-highlight";
 import { PicheButton } from "@/components/piche/piche-button";
 import { FilterChip } from "@/components/piche/filter-chip";
-
-const TONES = {
-  available: { bg: "var(--status-success-bg)", fg: "var(--status-success)", label: "Available" },
-  reserved: { bg: "#f4e6f7", fg: "var(--accent-purple)", label: "Reserved" },
-  sold: { bg: "var(--surface-secondary)", fg: "var(--text-mute)", label: "Sold" },
-} as const;
 
 export type UnitPanelProps = {
   site: Site;
@@ -101,7 +96,7 @@ export function UnitPanel({ site, units, selection, onSelect }: UnitPanelProps) 
         </span>
         <div className="flex flex-col">
           {listed.map((u) => {
-            const t = TONES[u.status];
+            const t = STATUS_TONES[u.status];
             const isSelected = u.id === selection.unit;
             return (
               <button
@@ -116,7 +111,7 @@ export function UnitPanel({ site, units, selection, onSelect }: UnitPanelProps) 
                 </span>
                 <span
                   className="rounded-full px-2.5 py-1 text-(length:--caption-md-size) font-medium"
-                  style={{ background: t.bg, color: t.fg }}
+                  style={{ background: t.chip, color: t.ink }}
                 >
                   {t.label}
                 </span>

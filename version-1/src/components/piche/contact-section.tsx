@@ -5,11 +5,33 @@ import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { PicheButton } from "@/components/piche/piche-button";
 import { TextField } from "@/components/piche/text-field";
 import { InlineMessage } from "@/components/piche/inline-message";
+import { useViewingRequest } from "@/components/piche/viewing-request-provider";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  hasReplyRoute,
+  VIEWING_EYEBROW,
+  VIEWING_PROMPT_LEAD,
+  VIEWING_REPLY_HINT,
+  VIEWING_SENT,
+} from "@/lib/viewing-request";
 
 export function ContactSection() {
+  // The floating bar hides itself as this section arrives; whatever the
+  // visitor had already written into it is waiting here.
+  const { draft, update } = useViewingRequest();
   const [sent, setSent] = useState(false);
+  const [replyMissing, setReplyMissing] = useState(false);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!hasReplyRoute(draft)) {
+      setReplyMissing(true);
+      return;
+    }
+    setReplyMissing(false);
+    setSent(true);
+  };
 
   return (
     <section
@@ -92,21 +114,34 @@ export function ContactSection() {
             </div>
           </div>
 
+          {/* Same request as the floating bar, same order: what you are after
+              first, then who to come back to. */}
           <form
             className="flex flex-col gap-(--space-xl) bg-(--surface-card) p-[clamp(1.5rem,4vw,4.5rem)]"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSent(true);
-            }}
+            onSubmit={handleSubmit}
           >
             <div className="flex flex-col gap-(--space-sm)">
               <p className="m-0 text-(length:--body-sm-strong-size) font-semibold tracking-[0.1em] text-(--text-mute) uppercase">
                 Contact form
               </p>
               <h3 className="m-0 font-(family-name:--font-display) text-(length:--heading-xl-size) font-bold tracking-[-0.035em] text-(--text-primary)">
-                Write to us
+                {VIEWING_EYEBROW}
               </h3>
             </div>
+            <label className="block">
+              <span className="mb-(--space-sm) block text-(length:--body-strong-size) font-semibold text-(--text-primary)">
+                {VIEWING_PROMPT_LEAD}
+              </span>
+              <Textarea
+                required
+                rows={4}
+                placeholder="Which project or apartment are you interested in?"
+                name="message"
+                value={draft.message}
+                onChange={(event) => update({ message: event.target.value })}
+                className="min-h-32 resize-y rounded-(--radius-md-ds) border-(--gray-300) bg-(--surface-canvas) px-4 py-3 text-(length:--body-md-size) text-(--text-primary) shadow-none transition-[border-color,box-shadow] duration-(--duration-base) focus-visible:border-(--text-primary) focus-visible:ring-4 focus-visible:ring-(--focus-ring)/20"
+              />
+            </label>
             <div className="grid grid-cols-1 gap-x-(--space-lg) gap-y-(--space-xl) sm:grid-cols-2">
               <TextField
                 required
@@ -114,12 +149,29 @@ export function ContactSection() {
                 label="Name"
                 placeholder="Your name"
                 name="name"
+                value={draft.name}
+                onChange={(event) => update({ name: event.target.value })}
               />
               <TextField
                 autoComplete="family-name"
-                label="Surname"
+                label="Surname (optional)"
                 placeholder="Your surname"
                 name="surname"
+                value={draft.surname}
+                onChange={(event) => update({ surname: event.target.value })}
+              />
+              <TextField
+                autoComplete="email"
+                label="E-mail"
+                type="email"
+                placeholder="name@example.com"
+                name="email"
+                aria-invalid={replyMissing || undefined}
+                value={draft.email}
+                onChange={(event) => {
+                  update({ email: event.target.value });
+                  setReplyMissing(false);
+                }}
               />
               <TextField
                 autoComplete="tel"
@@ -127,28 +179,21 @@ export function ContactSection() {
                 type="tel"
                 placeholder="+371"
                 name="phone"
-              />
-              <TextField
-                required
-                autoComplete="email"
-                label="E-mail"
-                type="email"
-                placeholder="name@example.com"
-                name="email"
+                aria-invalid={replyMissing || undefined}
+                value={draft.phone}
+                onChange={(event) => {
+                  update({ phone: event.target.value });
+                  setReplyMissing(false);
+                }}
               />
             </div>
-            <label className="block">
-              <span className="mb-(--space-sm) block text-(length:--body-strong-size) font-semibold text-(--text-primary)">
-                Your question or comment
-              </span>
-              <Textarea
-                required
-                rows={4}
-                placeholder="Which project or apartment are you interested in?"
-                name="message"
-                className="min-h-32 resize-y rounded-(--radius-md-ds) border-(--gray-300) bg-(--surface-canvas) px-4 py-3 text-(length:--body-md-size) text-(--text-primary) shadow-none transition-[border-color,box-shadow] duration-(--duration-base) focus-visible:border-(--text-primary) focus-visible:ring-4 focus-visible:ring-(--focus-ring)/20"
-              />
-            </label>
+            {replyMissing ? (
+              <InlineMessage tone="error">{VIEWING_REPLY_HINT}</InlineMessage>
+            ) : (
+              <p className="m-0 text-(length:--body-sm-size) text-(--text-mute)">
+                {VIEWING_REPLY_HINT}
+              </p>
+            )}
             <label className="flex items-start gap-(--space-md) text-(length:--body-sm-size) leading-relaxed text-(--text-mute)">
               <Checkbox
                 required
@@ -169,9 +214,7 @@ export function ContactSection() {
               </PicheButton>
               {sent ? (
                 <div className="motion-safe:animate-[reveal-up_420ms_var(--ease-standard)_both]">
-                  <InlineMessage tone="success">
-                    Thank you. Our sales team will contact you shortly.
-                  </InlineMessage>
+                  <InlineMessage tone="success">{VIEWING_SENT}</InlineMessage>
                 </div>
               ) : null}
             </div>

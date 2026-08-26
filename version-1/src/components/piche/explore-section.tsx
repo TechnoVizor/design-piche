@@ -32,6 +32,9 @@ export function ExploreSection() {
   const [siteId, setSiteId] = useState<string | null>(null);
   const [mode, setMode] = useState<"map" | "project">("map");
   const [selection, setSelection] = useState<Selection>(() => defaultSelection(SITES[0]));
+  // A site opens showing every block; choosing one clears the rest out of the
+  // way so nothing stands between the camera and the floor being read.
+  const [isolated, setIsolated] = useState(false);
   const [spin, setSpin] = useState(true);
 
   const site = siteId ? (SITES.find((s) => s.id === siteId) ?? null) : null;
@@ -44,6 +47,7 @@ export function ExploreSection() {
     if (!next) return;
     setSiteId(id);
     setSelection(defaultSelection(next));
+    setIsolated(false);
     setSpin(!reduced);
     setMode("project");
     setOpeningId(null);
@@ -52,7 +56,14 @@ export function ExploreSection() {
   const backToMap = () => {
     setMode("map");
     setOpeningId(null);
+    setIsolated(false);
     if (siteId) setFocusedId(siteId);
+  };
+
+  /** Picking a home — in the model or in the panel — settles on its building. */
+  const chooseUnit = (sel: Selection) => {
+    setSelection(sel);
+    setIsolated(true);
   };
 
   const showingProject = mode === "project" && site !== null;
@@ -111,7 +122,9 @@ export function ExploreSection() {
                 site={site}
                 units={units}
                 selection={selection}
-                onSelect={setSelection}
+                onSelect={chooseUnit}
+                isolated={isolated}
+                onIsolatedChange={setIsolated}
                 spin={spin && showingProject}
                 onSpinChange={setSpin}
                 onBack={backToMap}
@@ -122,7 +135,7 @@ export function ExploreSection() {
         </div>
 
         {showingProject && site ? (
-          <UnitPanel site={site} units={units} selection={selection} onSelect={setSelection} />
+          <UnitPanel site={site} units={units} selection={selection} onSelect={chooseUnit} />
         ) : (
           <ProjectList focusedId={focusedId} onFocus={setFocusedId} onOpen={openStart} />
         )}
