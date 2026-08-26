@@ -530,7 +530,7 @@ export function Explore3DSection() {
 
       <div
         data-reveal
-        className="grid grid-cols-1 items-stretch gap-(--space-lg) lg:grid-cols-[minmax(0,1fr)_400px]"
+        className="grid grid-cols-1 items-stretch gap-(--space-lg) lg:grid-cols-[minmax(0,1fr)_480px]"
       >
         <div className="relative min-h-155 overflow-hidden rounded-(--radius-lg-ds) bg-(--surface-card)">
           <div ref={hostRef} className="absolute inset-0 cursor-grab" />

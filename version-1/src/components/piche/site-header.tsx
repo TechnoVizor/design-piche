@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { Wordmark } from "@/components/piche/wordmark";
 import { SearchBar } from "@/components/piche/search-bar";
 import { LangSwitch } from "@/components/piche/lang-switch";
@@ -15,8 +14,6 @@ const NAV_LINKS = [
   { href: "#news", label: "News" },
   { href: "#contacts", label: "Contacts" },
 ];
-
-const CHOOSER_URL = "https://piche-chooser.vercel.app/";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -39,23 +36,20 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 border-b bg-(--surface-canvas) transition-[box-shadow,border-color] duration-(--duration-base) ease-(--ease-standard)",
-        scrolled
-          ? "border-transparent shadow-[0_1px_0_var(--border-hairline),0_8px_24px_-16px_rgba(0,0,0,0.25)]"
-          : "border-(--border-hairline) shadow-none",
+        "sticky top-0 z-30 transition-[padding] duration-400 ease-(--ease-standard)",
+        scrolled ? "px-(--space-lg) pt-(--space-sm)" : "px-0 pt-0",
       )}
     >
-      <div className="mx-auto flex h-(--nav-height) max-w-(--container-max) items-center gap-(--space-lg) px-(--container-pad)">
-        <a
-          href={CHOOSER_URL}
-          className="flex shrink-0 items-center gap-(--space-xs) text-(length:--body-sm-size) font-semibold text-(--text-mute) transition-colors duration-(--duration-base) hover:text-(--brand-primary)"
-        >
-          <ArrowLeft className="size-4" />
-          Versions
-        </a>
-        <span className="h-5 w-px shrink-0 bg-(--border-hairline)" />
+      <div
+        className={cn(
+          "mx-auto flex h-(--nav-height) items-center gap-(--space-lg) bg-(--surface-canvas) px-(--container-pad) transition-[max-width,border-radius,box-shadow,border-color] duration-400 ease-(--ease-standard)",
+          scrolled
+            ? "max-w-350 rounded-(--radius-full-ds) border border-(--border-hairline) shadow-[0_8px_24px_-12px_rgba(0,0,0,0.28)]"
+            : "max-w-(--container-max) rounded-none border-b border-(--border-hairline) shadow-none",
+        )}
+      >
         <Link href="#top" className="flex shrink-0 items-center">
-          <Wordmark text="PICHE" size={26} />
+          <Wordmark text="PICHE" size={30} />
         </Link>
         <nav className="hidden shrink-0 gap-(--space-lg) whitespace-nowrap lg:flex">
           {NAV_LINKS.map((l) => (

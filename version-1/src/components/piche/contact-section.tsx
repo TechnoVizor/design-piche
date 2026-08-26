@@ -16,7 +16,7 @@ export function ContactSection() {
         <div className="flex flex-col gap-(--space-xl)">
           <h2
             className="m-0 font-(family-name:--font-display) text-(length:--display-lg-size) font-bold text-(--text-primary)"
-            style={{ letterSpacing: "-0.8px" }}
+            style={{ lineHeight: 1.05, letterSpacing: "-0.025em" }}
           >
             Contacts
           </h2>

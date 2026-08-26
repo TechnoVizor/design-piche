@@ -7,7 +7,7 @@ export function BanksSection() {
         <div className="flex flex-col gap-(--space-sm)">
           <h2
             className="m-0 text-(length:--heading-xl-size) font-bold text-(--text-primary)"
-            style={{ letterSpacing: "-1.2px" }}
+            style={{ letterSpacing: "-0.03em" }}
           >
             Choose a bank
           </h2>

@@ -39,7 +39,7 @@ export function SiteFooter({
       <div className="mx-auto grid max-w-(--container-max) grid-cols-2 gap-(--space-xxl) sm:grid-cols-4">
         {FOOTER_COLUMNS.map((col) => (
           <div key={col.title} className="flex flex-col gap-(--space-md)">
-            <span className="text-(length:--body-sm-size) font-bold text-(--text-primary)">
+            <span className="text-(length:--heading-md-size) font-bold text-(--text-primary)">
               {col.title}
             </span>
             {col.links.map((link) => (
@@ -57,7 +57,7 @@ export function SiteFooter({
       <div className="mx-auto flex max-w-(--container-max) items-center gap-(--space-md) pt-(--space-xxl)">
         <span
           className="font-(family-name:--font-display) font-bold text-(--brand-primary)"
-          style={{ fontSize: 16, letterSpacing: "-0.4px" }}
+          style={{ fontSize: 20, letterSpacing: "-0.02em" }}
         >
           {brand}
         </span>
